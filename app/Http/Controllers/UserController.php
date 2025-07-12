@@ -23,7 +23,7 @@ class UserController extends Controller
         return response()->json([
             'user' => $request->validated(),
             'message' => 'The user was created correctly',
-        ]);
+        ], 201);
     }
 
     public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): JsonResponse
