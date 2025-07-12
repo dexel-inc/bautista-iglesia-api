@@ -10,7 +10,7 @@ class UserIndexTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_returns_all_users_successfully()
+    public function test_it_returns_all_users_successfully(): void
     {
         User::factory()->count(3)->create();
 
@@ -20,7 +20,7 @@ class UserIndexTest extends TestCase
             ->assertJsonCount(3);
     }
 
-    public function test_it_returns_empty_array_when_no_users_exist()
+    public function test_it_returns_empty_array_when_no_users_exist(): void
     {
         $response = $this->getJson(route('users.index'));
 
@@ -29,7 +29,7 @@ class UserIndexTest extends TestCase
             ->assertJson([]);
     }
 
-    public function test_it_returns_users_with_correct_structure()
+    public function test_it_returns_users_with_correct_structure(): void
     {
         User::factory()->create();
 
@@ -50,14 +50,14 @@ class UserIndexTest extends TestCase
             ]);
     }
 
-    public function test_it_returns_404_for_invalid_route()
+    public function test_it_returns_404_for_invalid_route(): void
     {
         $response = $this->getJson('/api/invalid-route');
 
         $response->assertNotFound();
     }
 
-    public function test_it_handles_large_number_of_users()
+    public function test_it_handles_large_number_of_users(): void
     {
         User::factory()->count(100)->create();
 
@@ -67,7 +67,7 @@ class UserIndexTest extends TestCase
         $this->assertLessThanOrEqual(100, count($response->json()));
     }
 
-    public function test_it_excludes_password_field_from_response()
+    public function test_it_excludes_password_field_from_response(): void
     {
         User::factory()->create();
 
@@ -78,7 +78,7 @@ class UserIndexTest extends TestCase
         $this->assertArrayNotHasKey('password', $user);
     }
 
-    public function test_it_excludes_remember_token_field_from_response()
+    public function test_it_excludes_remember_token_field_from_response(): void
     {
         User::factory()->create();
 
@@ -89,7 +89,7 @@ class UserIndexTest extends TestCase
         $this->assertArrayNotHasKey('remember_token', $user);
     }
 
-    public function test_it_handles_case_insensitive_search()
+    public function test_it_handles_case_insensitive_search(): void
     {
         User::factory()->create(['name' => 'Juan']);
 
@@ -100,7 +100,7 @@ class UserIndexTest extends TestCase
             ->assertJsonFragment(['name' => 'Juan']);
     }
 
-    public function test_it_returns_correct_http_status_codes()
+    public function test_it_returns_correct_http_status_codes(): void
     {
         $response = $this->getJson(route('users.index'));
         $response->assertStatus(200);
