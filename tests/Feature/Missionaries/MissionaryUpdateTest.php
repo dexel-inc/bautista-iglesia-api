@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Missionaries;
 
 use App\Models\Missionary;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -240,4 +240,4 @@ class MissionaryUpdateTest extends TestCase
             'image' => 'https://example.com/original.jpg',
         ]);
     }
-} 
+}

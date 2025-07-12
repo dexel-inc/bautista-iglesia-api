@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Missionaries;
 
 use App\Models\Missionary;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,4 +54,4 @@ class MissionaryShowTest extends TestCase
                 'updated_at',
             ]);
     }
-} 
+}

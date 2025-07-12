@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Testimonies;
 
 use App\Models\Testimony;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -224,4 +224,4 @@ class TestimonyUpdateTest extends TestCase
             'rating' => 3,
         ]);
     }
-} 
+}

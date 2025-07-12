@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Testimonies;
 
 use App\Models\Testimony;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -94,4 +94,4 @@ class TestimonyDestroyTest extends TestCase
             'name' => 'María García',
         ]);
     }
-} 
+}

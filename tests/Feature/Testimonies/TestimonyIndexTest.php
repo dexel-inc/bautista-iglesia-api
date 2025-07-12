@@ -1,48 +1,47 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Testimonies;
 
-use App\Models\Missionary;
+use App\Models\Testimony;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class MissionaryIndexTest extends TestCase
+class TestimonyIndexTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_returns_all_missionaries_successfully(): void
+    public function test_it_returns_all_testimonies_successfully(): void
     {
-        Missionary::factory()->count(3)->create();
+        Testimony::factory()->count(3)->create();
 
-        $response = $this->getJson(route('missionaries.index'));
+        $response = $this->getJson(route('testimonies.index'));
 
         $response->assertOk()
             ->assertJsonCount(3);
     }
 
-    public function test_it_returns_empty_array_when_no_missionaries_exist(): void
+    public function test_it_returns_empty_array_when_no_testimonies_exist(): void
     {
-        $response = $this->getJson(route('missionaries.index'));
+        $response = $this->getJson(route('testimonies.index'));
 
         $response->assertOk()
             ->assertJsonCount(0)
             ->assertJson([]);
     }
 
-    public function test_it_returns_missionaries_with_correct_structure(): void
+    public function test_it_returns_testimonies_with_correct_structure(): void
     {
-        Missionary::factory()->create();
+        Testimony::factory()->create();
 
-        $response = $this->getJson(route('missionaries.index'));
+        $response = $this->getJson(route('testimonies.index'));
 
         $response->assertOk()
             ->assertJsonStructure([
                 '*' => [
                     'id',
-                    'title',
-                    'message',
-                    'image',
-                    'disable_at',
+                    'name',
+                    'content',
+                    'rating',
                     'created_at',
                     'updated_at'
                 ]
@@ -56,11 +55,11 @@ class MissionaryIndexTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_it_handles_large_number_of_missionaries(): void
+    public function test_it_handles_large_number_of_testimonies(): void
     {
-        Missionary::factory()->count(100)->create();
+        Testimony::factory()->count(100)->create();
 
-        $response = $this->getJson(route('missionaries.index'));
+        $response = $this->getJson(route('testimonies.index'));
 
         $response->assertOk();
         $this->assertLessThanOrEqual(100, count($response->json()));
@@ -68,10 +67,10 @@ class MissionaryIndexTest extends TestCase
 
     public function test_it_returns_correct_http_status_codes(): void
     {
-        $response = $this->getJson(route('missionaries.index'));
+        $response = $this->getJson(route('testimonies.index'));
         $response->assertStatus(200);
 
         $response = $this->getJson('/api/nonexistent');
         $response->assertStatus(404);
     }
-} 
+}
