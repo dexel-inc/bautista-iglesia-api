@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\MissionaryController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TestimonyController;
@@ -10,3 +11,4 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('subscriptions', SubscriptionController::class);
 Route::apiResource('testimonies', TestimonyController::class);
 Route::apiResource('missionaries', MissionaryController::class);
+Route::apiResource('contents', ContentController::class);
