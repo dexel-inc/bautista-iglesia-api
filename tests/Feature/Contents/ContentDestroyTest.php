@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Contents;
 
 use App\Models\Content;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -97,4 +97,4 @@ class ContentDestroyTest extends TestCase
             'title' => 'Contenido 2',
         ]);
     }
-} 
+}

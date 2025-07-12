@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Contents;
 
-use App\Models\Content;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -152,4 +151,4 @@ class ContentStoreTest extends TestCase
             ]);
         }
     }
-} 
+}

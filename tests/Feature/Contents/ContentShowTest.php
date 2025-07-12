@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Contents;
 
 use App\Models\Content;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,4 +55,4 @@ class ContentShowTest extends TestCase
                 'updated_at',
             ]);
     }
-} 
+}

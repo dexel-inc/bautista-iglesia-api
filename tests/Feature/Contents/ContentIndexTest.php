@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Contents;
 
 use App\Models\Content;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -74,4 +74,4 @@ class ContentIndexTest extends TestCase
         $response = $this->getJson('/api/nonexistent');
         $response->assertStatus(404);
     }
-} 
+}
