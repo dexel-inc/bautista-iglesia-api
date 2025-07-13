@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\StoreOrUpdateTestimonyAction;
 use App\Http\Requests\Testimonies\TestimonyRequest;
+use App\Http\Requests\Testimonies\UpdateTestimonyRequest;
 use App\Http\Resources\Api\TestimonyResource;
 use App\Models\Testimony;
 use App\Responses\ApiResponse;
@@ -23,7 +24,7 @@ class TestimonyController extends Controller
         return ApiResponse::created(TestimonyResource::make($testimony));
     }
 
-    public function update(TestimonyRequest $request, Testimony $testimony, StoreOrUpdateTestimonyAction $action): JsonResponse
+    public function update(UpdateTestimonyRequest $request, Testimony $testimony, StoreOrUpdateTestimonyAction $action): JsonResponse
     {
         $action->execute($testimony, $request->validated());
         return ApiResponse::updated($testimony->id);

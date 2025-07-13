@@ -5,6 +5,8 @@ namespace Tests\Feature\Contents;
 use App\Constants\Response;
 use App\Constants\Status;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ContentStoreTest extends TestCase
@@ -13,11 +15,13 @@ class ContentStoreTest extends TestCase
 
     public function test_it_creates_content_successfully(): void
     {
+        Storage::fake('local');
+
         $contentData = [
             'type' => 'blog',
             'title' => 'Mi primer blog post',
             'description' => 'Esta es la descripción de mi primer blog post con contenido increíble.',
-            'image' => 'https://example.com/blog-image.jpg',
+            'image' => UploadedFile::fake()->image('blog-image.jpg'),
         ];
 
         $response = $this->postJson(route('contents.store'), $contentData);
@@ -45,7 +49,6 @@ class ContentStoreTest extends TestCase
                     'type' => 'blog',
                     'title' => 'Mi primer blog post',
                     'description' => 'Esta es la descripción de mi primer blog post con contenido increíble.',
-                    'image' => 'https://example.com/blog-image.jpg',
                 ]
             ]);
 
@@ -53,7 +56,6 @@ class ContentStoreTest extends TestCase
             'type' => 'blog',
             'title' => 'Mi primer blog post',
             'description' => 'Esta es la descripción de mi primer blog post con contenido increíble.',
-            'image' => 'https://example.com/blog-image.jpg',
         ]);
     }
 
@@ -67,11 +69,13 @@ class ContentStoreTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        Storage::fake('local');
+
         $contentData = [
             'type' => 123,
             'title' => 'Título válido',
             'description' => 'Descripción válida',
-            'image' => 'https://example.com/image.jpg',
+            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->postJson(route('contents.store'), $contentData);
@@ -82,16 +86,35 @@ class ContentStoreTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        Storage::fake('local');
+
         $contentData = [
             'type' => str_repeat('a', 256),
             'title' => str_repeat('b', 256),
             'description' => str_repeat('c', 2001),
-            'image' => str_repeat('d', 256),
+            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->postJson(route('contents.store'), $contentData);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['type', 'title', 'description', 'image']);
+            ->assertJsonValidationErrors(['type', 'title', 'description']);
+    }
+
+    public function test_it_validates_image_file_type(): void
+    {
+        Storage::fake('local');
+
+        $contentData = [
+            'type' => 'blog',
+            'title' => 'Título válido',
+            'description' => 'Descripción válida',
+            'image' => UploadedFile::fake()->create('document.pdf', 1024, 'application/pdf'),
+        ];
+
+        $response = $this->postJson(route('contents.store'), $contentData);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['image']);
     }
 }

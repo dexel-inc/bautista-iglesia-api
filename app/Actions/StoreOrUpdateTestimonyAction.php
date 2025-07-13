@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Helpers\FilesHelper;
 use App\Models\Testimony;
 
 class StoreOrUpdateTestimonyAction
@@ -10,8 +11,13 @@ class StoreOrUpdateTestimonyAction
     {
         $testimony->name = $data['name'];
         $testimony->content = $data['content'];
-        $testimony->image = $data['image'];
         $testimony->rating = $data['rating'];
+
+        if (isset($data['image'])) {
+            $imagePath = FilesHelper::save('testimony/images', $data['image']);
+            $testimony->image = $imagePath;
+        }
+
         $testimony->save();
 
         return $testimony;

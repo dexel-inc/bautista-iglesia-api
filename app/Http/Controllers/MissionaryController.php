@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\StoreOrUpdateMissionaryAction;
 use App\Http\Requests\Missionaries\MissionaryRequest;
+use App\Http\Requests\Missionaries\UpdateMissionaryRequest;
 use App\Http\Resources\Api\MissionaryResource;
 use App\Models\Missionary;
 use App\Responses\ApiResponse;
@@ -23,7 +24,7 @@ class MissionaryController extends Controller
         return ApiResponse::created(MissionaryResource::make($missionary));
     }
 
-    public function update(MissionaryRequest $request, Missionary $missionary, StoreOrUpdateMissionaryAction $action): JsonResponse
+    public function update(UpdateMissionaryRequest $request, Missionary $missionary, StoreOrUpdateMissionaryAction $action): JsonResponse
     {
         $action->execute($missionary, $request->validated());
         return ApiResponse::updated($missionary->id);

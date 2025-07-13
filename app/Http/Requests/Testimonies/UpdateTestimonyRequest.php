@@ -4,7 +4,7 @@ namespace App\Http\Requests\Testimonies;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TestimonyRequest extends FormRequest
+class UpdateTestimonyRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -20,4 +20,4 @@ class TestimonyRequest extends FormRequest
             'rating' => 'sometimes|integer|min:1|max:5',
         ];
     }
-}
+} 
