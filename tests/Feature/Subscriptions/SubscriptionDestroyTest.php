@@ -5,15 +5,15 @@ namespace Tests\Feature\Subscriptions;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Subscription;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class SubscriptionDestroyTest extends TestCase
+use Tests\BaseTestCase;
+
+class SubscriptionDestroyTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_deletes_subscription_successfully(): void
     {
+        $this->actingAsUser();
+
         $subscription = Subscription::factory()->create([
             'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
@@ -36,6 +36,8 @@ class SubscriptionDestroyTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_subscription(): void
     {
+        $this->actingAsUser();
+
         $response = $this->deleteJson(route('subscriptions.destroy', 999));
 
         $response->assertNotFound();

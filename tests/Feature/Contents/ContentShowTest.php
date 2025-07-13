@@ -3,15 +3,14 @@
 namespace Tests\Feature\Contents;
 
 use App\Models\Content;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class ContentShowTest extends TestCase
+use Tests\BaseTestCase;
+
+class ContentShowTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_shows_content_successfully(): void
     {
+        $this->actingAsUser();
         $content = Content::factory()->create([
             'type' => 'blog',
             'title' => 'Mi primer blog post',
@@ -52,6 +51,8 @@ class ContentShowTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_content(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('contents.show', 999));
 
         $response->assertNotFound();

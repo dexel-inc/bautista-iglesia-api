@@ -3,15 +3,15 @@
 namespace Tests\Feature\Users;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class UserShowTest extends TestCase
+use Tests\BaseTestCase;
+
+class UserShowTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_shows_user_successfully(): void
     {
+        $this->actingAsUser();
+
         $user = User::factory()->create([
             'name' => 'Juan',
             'surname' => 'Pérez',
@@ -52,6 +52,8 @@ class UserShowTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_user(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('users.show', 999));
 
         $response->assertNotFound();

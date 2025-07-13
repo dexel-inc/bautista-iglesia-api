@@ -5,15 +5,15 @@ namespace Tests\Feature\Users;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class UserStoreTest extends TestCase
+use Tests\BaseTestCase;
+
+class UserStoreTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_creates_user_successfully(): void
     {
+        $this->actingAsUser();
+
         $userData = [
             'name' => 'Juan',
             'surname' => 'Pérez',
@@ -61,6 +61,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_required_fields(): void
     {
+        $this->actingAsUser();
+
         $response = $this->postJson(route('users.store'), []);
 
         $response->assertUnprocessable()
@@ -69,6 +71,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_email_format(): void
     {
+        $this->actingAsUser();
+
         $userData = [
             'name' => 'Juan',
             'surname' => 'Pérez',
@@ -85,6 +89,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_email_uniqueness(): void
     {
+        $this->actingAsUser();
+
         User::factory()->create(['email' => 'juan.perez@example.com']);
 
         $userData = [
@@ -103,6 +109,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_phone_uniqueness(): void
     {
+        $this->actingAsUser();
+
         User::factory()->create(['phone' => '1234567890']);
 
         $userData = [
@@ -121,6 +129,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_password_minimum_length(): void
     {
+        $this->actingAsUser();
+
         $userData = [
             'name' => 'Juan',
             'surname' => 'Pérez',
@@ -137,6 +147,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         $userData = [
             'name' => 123,
             'surname' => 456,
@@ -153,6 +165,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         $userData = [
             'name' => str_repeat('a', 256),
             'surname' => str_repeat('b', 256),
@@ -169,6 +183,8 @@ class UserStoreTest extends TestCase
 
     public function test_it_hashes_password_correctly(): void
     {
+        $this->actingAsUser();
+
         $userData = [
             'name' => 'Juan',
             'surname' => 'Pérez',

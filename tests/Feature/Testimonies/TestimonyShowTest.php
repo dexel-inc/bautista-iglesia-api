@@ -3,15 +3,15 @@
 namespace Tests\Feature\Testimonies;
 
 use App\Models\Testimony;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class TestimonyShowTest extends TestCase
+use Tests\BaseTestCase;
+
+class TestimonyShowTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_shows_testimony_successfully(): void
     {
+        $this->actingAsUser();
+
         $testimony = Testimony::factory()->create([
             'name' => 'Juan Pérez',
             'content' => 'Este es un testimonio increíble sobre mi experiencia.',
@@ -50,6 +50,8 @@ class TestimonyShowTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_testimony(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('testimonies.show', 999));
 
         $response->assertNotFound();

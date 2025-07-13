@@ -3,15 +3,15 @@
 namespace Tests\Feature\Missionaries;
 
 use App\Models\Missionary;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class MissionaryIndexTest extends TestCase
+use Tests\BaseTestCase;
+
+class MissionaryIndexTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_returns_all_missionaries_successfully(): void
     {
+        $this->actingAsUser();
+
         Missionary::factory()->count(3)->create();
 
         $response = $this->getJson(route('missionaries.index'));
@@ -28,6 +28,8 @@ class MissionaryIndexTest extends TestCase
 
     public function test_it_returns_empty_array_when_no_missionaries_exist(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('missionaries.index'));
 
         $response->assertOk()
@@ -42,6 +44,8 @@ class MissionaryIndexTest extends TestCase
 
     public function test_it_returns_missionaries_with_correct_structure(): void
     {
+        $this->actingAsUser();
+
         Missionary::factory()->create();
 
         $response = $this->getJson(route('missionaries.index'));

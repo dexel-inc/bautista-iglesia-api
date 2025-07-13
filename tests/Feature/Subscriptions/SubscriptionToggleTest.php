@@ -5,15 +5,15 @@ namespace Tests\Feature\Subscriptions;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Subscription;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class SubscriptionToggleTest extends TestCase
+use Tests\BaseTestCase;
+
+class SubscriptionToggleTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_disables_enabled_subscription(): void
     {
+        $this->actingAsUser();
+
         $subscription = Subscription::factory()->create([
             'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
@@ -41,6 +41,8 @@ class SubscriptionToggleTest extends TestCase
 
     public function test_it_enables_disabled_subscription(): void
     {
+        $this->actingAsUser();
+
         $subscription = Subscription::factory()->create([
             'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
@@ -68,8 +70,10 @@ class SubscriptionToggleTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_subscription(): void
     {
+        $this->actingAsUser();
+
         $response = $this->patchJson(route('subscriptions.toggle', 999));
 
         $response->assertNotFound();
     }
-} 
+}

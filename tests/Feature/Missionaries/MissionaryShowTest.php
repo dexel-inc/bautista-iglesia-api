@@ -3,15 +3,15 @@
 namespace Tests\Feature\Missionaries;
 
 use App\Models\Missionary;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class MissionaryShowTest extends TestCase
+use Tests\BaseTestCase;
+
+class MissionaryShowTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_shows_missionary_successfully(): void
     {
+        $this->actingAsUser();
+
         $missionary = Missionary::factory()->create([
             'title' => 'Misión en África',
             'message' => 'Esta es una misión increíble para llevar esperanza a África.',
@@ -51,6 +51,8 @@ class MissionaryShowTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_missionary(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('missionaries.show', 999));
 
         $response->assertNotFound();

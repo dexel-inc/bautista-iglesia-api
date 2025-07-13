@@ -5,18 +5,20 @@ namespace Tests\Feature\Testimonies;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Testimony;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\BaseTestCase;
 
-class TestimonyUpdateTest extends TestCase
+class TestimonyUpdateTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_updates_testimony_successfully(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create([
             'name' => 'Juan Pérez',
@@ -54,7 +56,11 @@ class TestimonyUpdateTest extends TestCase
 
     public function test_it_updates_testimony_partially(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create([
             'name' => 'Juan Pérez',
@@ -92,7 +98,11 @@ class TestimonyUpdateTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create();
 
@@ -109,7 +119,11 @@ class TestimonyUpdateTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create();
 
@@ -127,7 +141,11 @@ class TestimonyUpdateTest extends TestCase
 
     public function test_it_validates_rating_range(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create();
 
@@ -144,7 +162,11 @@ class TestimonyUpdateTest extends TestCase
 
     public function test_it_validates_rating_minimum(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create();
 
@@ -161,7 +183,11 @@ class TestimonyUpdateTest extends TestCase
 
     public function test_it_validates_image_file_type(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimony = Testimony::factory()->create();
 

@@ -3,15 +3,15 @@
 namespace Tests\Feature\Subscriptions;
 
 use App\Models\Subscription;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class SubscriptionIndexTest extends TestCase
+use Tests\BaseTestCase;
+
+class SubscriptionIndexTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_returns_all_subscriptions_successfully(): void
     {
+        $this->actingAsUser();
+
         Subscription::factory()->count(3)->create();
 
         $response = $this->getJson(route('subscriptions.index'));
@@ -28,6 +28,8 @@ class SubscriptionIndexTest extends TestCase
 
     public function test_it_returns_empty_array_when_no_subscriptions_exist(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('subscriptions.index'));
 
         $response->assertOk()
@@ -42,6 +44,8 @@ class SubscriptionIndexTest extends TestCase
 
     public function test_it_returns_subscriptions_with_correct_structure(): void
     {
+        $this->actingAsUser();
+
         Subscription::factory()->create();
 
         $response = $this->getJson(route('subscriptions.index'));

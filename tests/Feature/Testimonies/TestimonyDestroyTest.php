@@ -5,15 +5,15 @@ namespace Tests\Feature\Testimonies;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Testimony;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class TestimonyDestroyTest extends TestCase
+use Tests\BaseTestCase;
+
+class TestimonyDestroyTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_deletes_testimony_successfully(): void
     {
+        $this->actingAsUser();
+
         $testimony = Testimony::factory()->create([
             'name' => 'Juan Pérez',
             'content' => 'Este es un testimonio increíble sobre mi experiencia.',
@@ -36,6 +36,8 @@ class TestimonyDestroyTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_testimony(): void
     {
+        $this->actingAsUser();
+
         $response = $this->deleteJson(route('testimonies.destroy', 999));
 
         $response->assertNotFound();

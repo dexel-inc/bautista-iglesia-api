@@ -5,18 +5,20 @@ namespace Tests\Feature\Missionaries;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Missionary;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\BaseTestCase;
 
-class MissionaryUpdateTest extends TestCase
+class MissionaryUpdateTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_updates_missionary_successfully(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create([
             'title' => 'Misión Original',
@@ -49,7 +51,7 @@ class MissionaryUpdateTest extends TestCase
             'title' => 'Misión Actualizada',
             'message' => 'Mensaje actualizado',
         ]);
-        
+
         // Verificamos que se guardó una imagen
         $updatedMissionary = $missionary->fresh();
         $this->assertNotNull($updatedMissionary->image);
@@ -58,7 +60,11 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_updates_missionary_partially(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create([
             'title' => 'Misión Original',
@@ -91,7 +97,7 @@ class MissionaryUpdateTest extends TestCase
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
         ]);
-        
+
         // Verificamos que se guardó una imagen
         $updatedMissionary = $missionary->fresh();
         $this->assertNotNull($updatedMissionary->image);
@@ -100,7 +106,11 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create();
 
@@ -117,7 +127,11 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create();
 
@@ -135,7 +149,11 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_validates_disable_at_date_format(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create();
 
@@ -152,7 +170,11 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_can_set_disable_at_to_null(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create([
             'disable_at' => '2024-12-31 23:59:59',
@@ -177,7 +199,11 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_validates_image_file_type(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionary = Missionary::factory()->create();
 

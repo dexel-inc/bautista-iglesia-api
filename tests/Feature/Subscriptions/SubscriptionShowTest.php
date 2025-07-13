@@ -3,15 +3,15 @@
 namespace Tests\Feature\Subscriptions;
 
 use App\Models\Subscription;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class SubscriptionShowTest extends TestCase
+use Tests\BaseTestCase;
+
+class SubscriptionShowTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_shows_subscription_successfully(): void
     {
+        $this->actingAsUser();
+
         $subscription = Subscription::factory()->create([
             'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
@@ -49,6 +49,8 @@ class SubscriptionShowTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_subscription(): void
     {
+        $this->actingAsUser();
+
         $response = $this->getJson(route('subscriptions.show', 999));
 
         $response->assertNotFound();

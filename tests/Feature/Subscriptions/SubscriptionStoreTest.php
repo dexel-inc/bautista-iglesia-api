@@ -5,15 +5,15 @@ namespace Tests\Feature\Subscriptions;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Subscription;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class SubscriptionStoreTest extends TestCase
+use Tests\BaseTestCase;
+
+class SubscriptionStoreTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_creates_subscription_successfully(): void
     {
+        $this->actingAsUser();
+
         $subscriptionData = [
             'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
@@ -56,6 +56,8 @@ class SubscriptionStoreTest extends TestCase
 
     public function test_it_validates_required_fields(): void
     {
+        $this->actingAsUser();
+
         $response = $this->postJson(route('subscriptions.store'), []);
 
         $response->assertUnprocessable()
@@ -64,6 +66,8 @@ class SubscriptionStoreTest extends TestCase
 
     public function test_it_validates_email_format(): void
     {
+        $this->actingAsUser();
+
         $subscriptionData = [
             'name' => 'Juan Pérez',
             'email' => 'invalid-email',
@@ -78,6 +82,8 @@ class SubscriptionStoreTest extends TestCase
 
     public function test_it_validates_email_uniqueness(): void
     {
+        $this->actingAsUser();
+
         Subscription::factory()->create(['email' => 'juan.perez@example.com']);
 
         $subscriptionData = [
@@ -94,6 +100,8 @@ class SubscriptionStoreTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         $subscriptionData = [
             'name' => 123,
             'email' => 'juan.perez@example.com',
@@ -108,6 +116,8 @@ class SubscriptionStoreTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         $subscriptionData = [
             'name' => str_repeat('a', 256),
             'email' => str_repeat('c', 250) . '@example.com',

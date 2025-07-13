@@ -3,15 +3,16 @@
 namespace Tests\Feature\Missionaries;
 
 use App\Models\Missionary;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class MissionaryDestroyTest extends TestCase
+use Tests\BaseTestCase;
+
+class MissionaryDestroyTest extends BaseTestCase
+
 {
-    use RefreshDatabase;
-
     public function test_it_deletes_missionary_successfully(): void
     {
+        $this->actingAsUser();
+
         $missionary = Missionary::factory()->create([
             'title' => 'Misión en África',
             'message' => 'Esta es una misión increíble para llevar esperanza a África.',
@@ -35,6 +36,8 @@ class MissionaryDestroyTest extends TestCase
 
     public function test_it_returns_404_for_nonexistent_missionary(): void
     {
+        $this->actingAsUser();
+
         $response = $this->deleteJson(route('missionaries.destroy', 999));
 
         $response->assertNotFound();

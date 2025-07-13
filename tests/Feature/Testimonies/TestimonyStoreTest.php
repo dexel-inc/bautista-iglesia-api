@@ -4,18 +4,20 @@ namespace Tests\Feature\Testimonies;
 
 use App\Constants\Response;
 use App\Constants\Status;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\BaseTestCase;
 
-class TestimonyStoreTest extends TestCase
+class TestimonyStoreTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_creates_testimony_successfully(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => 'Juan Pérez',
@@ -61,7 +63,11 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_creates_testimony_with_default_rating(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => 'María García',
@@ -83,6 +89,8 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_validates_required_fields(): void
     {
+        $this->actingAsUser();
+
         $response = $this->postJson(route('testimonies.store'), []);
 
         $response->assertUnprocessable()
@@ -91,7 +99,11 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => 123,
@@ -108,7 +120,11 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => str_repeat('a', 256),
@@ -125,7 +141,11 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_validates_rating_range(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => 'Juan Pérez',
@@ -142,7 +162,11 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_validates_rating_minimum(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => 'Juan Pérez',
@@ -159,7 +183,11 @@ class TestimonyStoreTest extends TestCase
 
     public function test_it_validates_image_file_type(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $testimonyData = [
             'name' => 'Juan Pérez',

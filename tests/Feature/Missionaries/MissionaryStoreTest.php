@@ -4,18 +4,21 @@ namespace Tests\Feature\Missionaries;
 
 use App\Constants\Response;
 use App\Constants\Status;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\BaseTestCase;
 
-class MissionaryStoreTest extends TestCase
+class MissionaryStoreTest extends BaseTestCase
+
 {
-    use RefreshDatabase;
-
     public function test_it_creates_missionary_successfully(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionaryData = [
             'title' => 'Misión en África',
@@ -59,7 +62,11 @@ class MissionaryStoreTest extends TestCase
 
     public function test_it_creates_missionary_without_disable_at(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionaryData = [
             'title' => 'Misión en Asia',
@@ -80,6 +87,7 @@ class MissionaryStoreTest extends TestCase
 
     public function test_it_validates_required_fields(): void
     {
+        $this->actingAsUser();
         $response = $this->postJson(route('missionaries.store'), []);
 
         $response->assertUnprocessable()
@@ -88,7 +96,11 @@ class MissionaryStoreTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionaryData = [
             'title' => 123,
@@ -104,7 +116,11 @@ class MissionaryStoreTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionaryData = [
             'title' => str_repeat('a', 256),
@@ -120,7 +136,11 @@ class MissionaryStoreTest extends TestCase
 
     public function test_it_validates_disable_at_date_format(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionaryData = [
             'title' => 'Misión válida',
@@ -137,7 +157,11 @@ class MissionaryStoreTest extends TestCase
 
     public function test_it_validates_image_file_type(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $missionaryData = [
             'title' => 'Misión válida',

@@ -4,18 +4,18 @@ namespace Tests\Feature\Contents;
 
 use App\Constants\Response;
 use App\Constants\Status;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\BaseTestCase;
 
-class ContentStoreTest extends TestCase
+class ContentStoreTest extends BaseTestCase
 {
-    use RefreshDatabase;
 
     public function test_it_creates_content_successfully(): void
     {
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $contentData = [
             'type' => 'blog',
@@ -61,6 +61,8 @@ class ContentStoreTest extends TestCase
 
     public function test_it_validates_required_fields(): void
     {
+        $this->actingAsUser();
+
         $response = $this->postJson(route('contents.store'), []);
 
         $response->assertUnprocessable()
@@ -70,6 +72,8 @@ class ContentStoreTest extends TestCase
     public function test_it_validates_string_fields(): void
     {
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $contentData = [
             'type' => 123,
@@ -88,6 +92,8 @@ class ContentStoreTest extends TestCase
     {
         Storage::fake('local');
 
+        $this->actingAsUser();
+
         $contentData = [
             'type' => str_repeat('a', 256),
             'title' => str_repeat('b', 256),
@@ -104,6 +110,7 @@ class ContentStoreTest extends TestCase
     public function test_it_validates_image_file_type(): void
     {
         Storage::fake('local');
+        $this->actingAsUser();
 
         $contentData = [
             'type' => 'blog',
@@ -116,5 +123,19 @@ class ContentStoreTest extends TestCase
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['image']);
+    }
+
+    public function test_it_requires_authentication(): void
+    {
+        Storage::fake('local');
+
+        $contentData = [
+            'type' => 'blog',
+            'title' => 'Test Content',
+            'description' => 'Test Description',
+            'image' => UploadedFile::fake()->image('test.jpg'),
+        ];
+
+        $this->assertRequiresAuthentication('POST', route('contents.store'), $contentData);
     }
 }

@@ -5,18 +5,20 @@ namespace Tests\Feature\Contents;
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Content;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\BaseTestCase;
 
-class ContentUpdateTest extends TestCase
+class ContentUpdateTest extends BaseTestCase
 {
-    use RefreshDatabase;
-
     public function test_it_updates_content_successfully(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $content = Content::factory()->create([
             'type' => 'blog',
@@ -54,7 +56,11 @@ class ContentUpdateTest extends TestCase
 
     public function test_it_updates_content_partially(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $content = Content::factory()->create([
             'type' => 'blog',
@@ -92,7 +98,11 @@ class ContentUpdateTest extends TestCase
 
     public function test_it_validates_string_fields(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $content = Content::factory()->create();
 
@@ -109,7 +119,11 @@ class ContentUpdateTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $content = Content::factory()->create();
 
@@ -128,7 +142,11 @@ class ContentUpdateTest extends TestCase
 
     public function test_it_validates_image_file_type(): void
     {
+        $this->actingAsUser();
+
         Storage::fake('local');
+
+        $this->actingAsUser();
 
         $content = Content::factory()->create();
 
