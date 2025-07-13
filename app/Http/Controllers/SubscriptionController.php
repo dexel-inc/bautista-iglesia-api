@@ -41,4 +41,17 @@ class SubscriptionController extends Controller
 
         return ApiResponse::quickOk('The subscription was deleted correctly');
     }
+
+    public function toggle(Subscription $subscription): JsonResponse
+    {
+        $wasDisabled = $subscription->isDisabled();
+        
+        $subscription->toggle();
+        
+        $message = $wasDisabled 
+            ? 'The subscription was enabled correctly' 
+            : 'The subscription was disabled correctly';
+
+        return ApiResponse::quickOk($message);
+    }
 } 
