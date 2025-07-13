@@ -17,7 +17,13 @@ class SubscriptionIndexTest extends TestCase
         $response = $this->getJson(route('subscriptions.index'));
 
         $response->assertOk()
-            ->assertJsonCount(3, 'data');
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => []
+            ]);
     }
 
     public function test_it_returns_empty_array_when_no_subscriptions_exist(): void
@@ -26,7 +32,12 @@ class SubscriptionIndexTest extends TestCase
 
         $response->assertOk()
             ->assertJsonCount(0, 'data')
-            ->assertJson(['data' => []]);
+            ->assertJson([
+                'status' => [
+                    'status' => 'OK'
+                ],
+                'data' => []
+            ]);
     }
 
     public function test_it_returns_subscriptions_with_correct_structure(): void
@@ -37,6 +48,9 @@ class SubscriptionIndexTest extends TestCase
 
         $response->assertOk()
             ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
                 'data' => [
                     '*' => [
                         'id',

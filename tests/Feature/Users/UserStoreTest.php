@@ -24,13 +24,31 @@ class UserStoreTest extends TestCase
 
         $response = $this->postJson(route('users.store'), $userData);
 
-        $response->assertOk()
-            ->assertJson([
-                'body' => [
-                    'status' => Status::OK,
-                    'reason' => Response::HTTP_CREATED,
-                    'message' => 'The user was created correctly',
+        $response->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
                 ],
+                'data' => [
+                    'id',
+                    'name',
+                    'surname',
+                    'email',
+                    'phone',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
+            ->assertJson([
+                'status' => [
+                    'status' => Status::OK,
+                ],
+                'data' => [
+                    'name' => 'Juan',
+                    'surname' => 'Pérez',
+                    'email' => 'juan.perez@example.com',
+                    'phone' => '1234567890',
+                ]
             ]);
 
         $this->assertDatabaseHas('users', [

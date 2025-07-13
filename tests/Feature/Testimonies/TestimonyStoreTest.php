@@ -22,13 +22,31 @@ class TestimonyStoreTest extends TestCase
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
 
-        $response->assertOk()
-            ->assertJson([
-                'body' => [
-                    'status' => Status::OK,
-                    'reason' => Response::HTTP_CREATED,
-                    'message' => 'The testimony was created correctly',
+        $response->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
                 ],
+                'data' => [
+                    'id',
+                    'name',
+                    'content',
+                    'image',
+                    'rating',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
+            ->assertJson([
+                'status' => [
+                    'status' => Status::OK,
+                ],
+                'data' => [
+                    'name' => 'Juan Pérez',
+                    'content' => 'Este es un testimonio increíble sobre mi experiencia.',
+                    'rating' => 5,
+                    'image' => 'https://example.com/blog-image.jpg',
+                ]
             ]);
 
         $this->assertDatabaseHas('testimonies', [
@@ -49,7 +67,7 @@ class TestimonyStoreTest extends TestCase
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
 
-        $response->assertOk();
+        $response->assertStatus(Response::HTTP_CREATED);
 
         $this->assertDatabaseHas('testimonies', [
             'name' => 'María García',

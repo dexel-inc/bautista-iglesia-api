@@ -17,7 +17,13 @@ class UserIndexTest extends TestCase
         $response = $this->getJson(route('users.index'));
 
         $response->assertOk()
-            ->assertJsonCount(3, 'data');
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => []
+            ]);
     }
 
     public function test_it_returns_empty_array_when_no_users_exist(): void
@@ -27,6 +33,9 @@ class UserIndexTest extends TestCase
         $response->assertOk()
             ->assertJsonCount(0, 'data')
             ->assertJson([
+                'status' => [
+                    'status' => 'OK'
+                ],
                 'data' => []
             ]);
     }

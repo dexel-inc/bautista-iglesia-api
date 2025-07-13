@@ -8,37 +8,35 @@ use App\Http\Resources\Api\TestimonyResource;
 use App\Models\Testimony;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TestimonyController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return TestimonyResource::collection(Testimony::all());
+        $testimonies = Testimony::all();
+        return ApiResponse::successWithData(TestimonyResource::collection($testimonies));
     }
 
     public function store(TestimonyRequest $request, StoreOrUpdateTestimonyAction $action): JsonResponse
     {
-        $action->execute(new Testimony(), $request->validated());
-        return ApiResponse::quickCreated('The testimony was created correctly');
+        $testimony = $action->execute(new Testimony(), $request->validated());
+        return ApiResponse::created(TestimonyResource::make($testimony));
     }
 
     public function update(TestimonyRequest $request, Testimony $testimony, StoreOrUpdateTestimonyAction $action): JsonResponse
     {
         $action->execute($testimony, $request->validated());
-
-        return ApiResponse::quickOk('The testimony was updated correctly');
+        return ApiResponse::updated($testimony->id);
     }
 
-    public function show(Testimony $testimony): TestimonyResource
+    public function show(Testimony $testimony): JsonResponse
     {
-        return TestimonyResource::make($testimony);
+        return ApiResponse::successWithData(TestimonyResource::make($testimony));
     }
 
     public function destroy(Testimony $testimony): JsonResponse
     {
         $testimony->delete();
-
-        return ApiResponse::quickOk('The testimony was deleted correctly');
+        return ApiResponse::successOnly();
     }
 } 

@@ -8,37 +8,35 @@ use App\Http\Resources\Api\UserResource;
 use App\Models\User;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return UserResource::collection(User::all());
+        $users = User::all();
+        return ApiResponse::successWithData(UserResource::collection($users));
     }
 
     public function store(UserRequest $request, StoreOrUpdateUserAction $action): JsonResponse
     {
-        $action->execute(new User(), $request->validated());
-        return ApiResponse::quickCreated('The user was created correctly');
+        $user = $action->execute(new User(), $request->validated());
+        return ApiResponse::created(UserResource::make($user));
     }
 
     public function update(UserRequest $request, User $user, StoreOrUpdateUserAction $action): JsonResponse
     {
         $action->execute($user, $request->validated());
-
-        return ApiResponse::quickOk('The user was updated correctly');
+        return ApiResponse::updated($user->id);
     }
 
-    public function show(User $user): UserResource
+    public function show(User $user): JsonResponse
     {
-        return UserResource::make($user);
+        return ApiResponse::successWithData(UserResource::make($user));
     }
 
     public function destroy(User $user): JsonResponse
     {
         $user->delete();
-
-        return ApiResponse::quickOk('The user was deleted correctly');
+        return ApiResponse::successOnly();
     }
 }

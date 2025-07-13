@@ -32,10 +32,11 @@ class ContentUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The content was updated correctly',
+                ],
+                'data' => [
+                    'id' => $content->id,
                 ],
             ]);
 
@@ -68,10 +69,11 @@ class ContentUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The content was updated correctly',
+                ],
+                'data' => [
+                    'id' => $content->id,
                 ],
             ]);
 

@@ -32,10 +32,11 @@ class MissionaryUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The missionary was updated correctly',
+                ],
+                'data' => [
+                    'id' => $missionary->id,
                 ],
             ]);
 
@@ -67,10 +68,11 @@ class MissionaryUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The missionary was updated correctly',
+                ],
+                'data' => [
+                    'id' => $missionary->id,
                 ],
             ]);
 

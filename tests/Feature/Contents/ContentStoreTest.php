@@ -22,12 +22,30 @@ class ContentStoreTest extends TestCase
 
         $response = $this->postJson(route('contents.store'), $contentData);
 
-        $response->assertOk()
+        $response->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => [
+                    'id',
+                    'type',
+                    'title',
+                    'description',
+                    'image',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_CREATED,
-                    'message' => 'The content was created correctly',
+                ],
+                'data' => [
+                    'type' => 'blog',
+                    'title' => 'Mi primer blog post',
+                    'description' => 'Esta es la descripción de mi primer blog post con contenido increíble.',
+                    'image' => 'https://example.com/blog-image.jpg',
                 ]
             ]);
 

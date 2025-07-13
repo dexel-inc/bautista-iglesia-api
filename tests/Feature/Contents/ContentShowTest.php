@@ -22,7 +22,24 @@ class ContentShowTest extends TestCase
         $response = $this->getJson(route('contents.show', $content));
 
         $response->assertOk()
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => [
+                    'id',
+                    'type',
+                    'title',
+                    'description',
+                    'image',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
             ->assertJson([
+                'status' => [
+                    'status' => 'OK',
+                ],
                 'data' => [
                     'id' => $content->id,
                     'type' => 'blog',

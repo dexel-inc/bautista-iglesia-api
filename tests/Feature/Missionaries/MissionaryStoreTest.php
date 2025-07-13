@@ -22,13 +22,30 @@ class MissionaryStoreTest extends TestCase
 
         $response = $this->postJson(route('missionaries.store'), $missionaryData);
 
-        $response->assertOk()
-            ->assertJson([
-                'body' => [
-                    'status' => Status::OK,
-                    'reason' => Response::HTTP_CREATED,
-                    'message' => 'The missionary was created correctly',
+        $response->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
                 ],
+                'data' => [
+                    'id',
+                    'title',
+                    'message',
+                    'image',
+                    'disable_at',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
+            ->assertJson([
+                'status' => [
+                    'status' => Status::OK,
+                ],
+                'data' => [
+                    'title' => 'Misión en África',
+                    'message' => 'Esta es una misión increíble para llevar esperanza a África.',
+                    'image' => 'https://example.com/africa-mission.jpg',
+                ]
             ]);
 
         $this->assertDatabaseHas('missionaries', [
@@ -48,7 +65,7 @@ class MissionaryStoreTest extends TestCase
 
         $response = $this->postJson(route('missionaries.store'), $missionaryData);
 
-        $response->assertOk();
+        $response->assertStatus(Response::HTTP_CREATED);
 
         $this->assertDatabaseHas('missionaries', [
             'title' => 'Misión en Asia',

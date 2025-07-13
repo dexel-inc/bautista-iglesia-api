@@ -8,37 +8,35 @@ use App\Http\Resources\Api\ContentResource;
 use App\Models\Content;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ContentController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return ContentResource::collection(Content::all());
+        $contents = Content::all();
+        return ApiResponse::successWithData(ContentResource::collection($contents));
     }
 
     public function store(StoreContentRequest $request, StoreOrUpdateContentAction $action): JsonResponse
     {
-        $action->execute(new Content(),$request->validated());
-        return ApiResponse::quickCreated('The content was created correctly');
+        $content = $action->execute(new Content(), $request->validated());
+        return ApiResponse::created(ContentResource::make($content));
     }
 
     public function update(StoreContentRequest $request, Content $content, StoreOrUpdateContentAction $action): JsonResponse
     {
         $action->execute($content, $request->validated());
-
-        return ApiResponse::quickOk('The content was updated correctly');
+        return ApiResponse::updated($content->id);
     }
 
-    public function show(Content $content): ContentResource
+    public function show(Content $content): JsonResponse
     {
-        return ContentResource::make($content);
+        return ApiResponse::successWithData(ContentResource::make($content));
     }
 
     public function destroy(Content $content): JsonResponse
     {
         $content->delete();
-
-        return ApiResponse::quickOk('The content was deleted correctly');
+        return ApiResponse::successOnly();
     }
 }

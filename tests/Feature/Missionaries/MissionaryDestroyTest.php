@@ -23,10 +23,8 @@ class MissionaryDestroyTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
-                    'status' => 'ok',
-                    'reason' => 200,
-                    'message' => 'The missionary was deleted correctly',
+                'status' => [
+                    'status' => 'OK',
                 ],
             ]);
 

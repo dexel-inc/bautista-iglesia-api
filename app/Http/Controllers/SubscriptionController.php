@@ -8,50 +8,41 @@ use App\Http\Resources\Api\SubscriptionResource;
 use App\Models\Subscription;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class SubscriptionController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return SubscriptionResource::collection(Subscription::all());
+        $subscriptions = Subscription::all();
+        return ApiResponse::successWithData(SubscriptionResource::collection($subscriptions));
     }
 
     public function store(SubscriptionRequest $request, StoreOrUpdateSubscriptionAction $action): JsonResponse
     {
-        $action->execute(new Subscription(), $request->validated());
-        return ApiResponse::quickCreated('The subscription was created correctly');
+        $subscription = $action->execute(new Subscription(), $request->validated());
+        return ApiResponse::created(SubscriptionResource::make($subscription));
     }
 
     public function update(SubscriptionRequest $request, Subscription $subscription, StoreOrUpdateSubscriptionAction $action): JsonResponse
     {
         $action->execute($subscription, $request->validated());
-
-        return ApiResponse::quickOk('The subscription was updated correctly');
+        return ApiResponse::updated($subscription->id);
     }
 
-    public function show(Subscription $subscription): SubscriptionResource
+    public function show(Subscription $subscription): JsonResponse
     {
-        return SubscriptionResource::make($subscription);
+        return ApiResponse::successWithData(SubscriptionResource::make($subscription));
     }
 
     public function destroy(Subscription $subscription): JsonResponse
     {
         $subscription->delete();
-
-        return ApiResponse::quickOk('The subscription was deleted correctly');
+        return ApiResponse::successOnly();
     }
 
     public function toggle(Subscription $subscription): JsonResponse
     {
-        $wasDisabled = $subscription->isDisabled();
-        
         $subscription->toggle();
-        
-        $message = $wasDisabled 
-            ? 'The subscription was enabled correctly' 
-            : 'The subscription was disabled correctly';
-
-        return ApiResponse::quickOk($message);
+        return ApiResponse::updated($subscription->id);
     }
 } 

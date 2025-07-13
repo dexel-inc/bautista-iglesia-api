@@ -8,32 +8,54 @@ use Illuminate\Http\JsonResponse;
 
 abstract class ApiResponse
 {
-    public static function quick(string $status, string $message, array $data = [], int $reason = Response::HTTP_OK): JsonResponse
+    public static function success(array $data = []): JsonResponse
     {
-        return response()->json(
-            [
-                'body' => [
-                    'status' => $status,
-                    'reason' => $reason,
-                    'message' => $message,
-                    'date' => now()->toIso8601String(),
-                ],
-            ] + $data,
-        );
+        return response()->json([
+            'status' => [
+                'status' => Status::OK,
+            ],
+            'data' => $data,
+        ]);
     }
 
-    public static function quickOk(string $message, array $data = [], int $reason = Response::HTTP_OK): JsonResponse
+    public static function successWithData($data): JsonResponse
     {
-        return self::quick(Status::OK, $message, $data, $reason);
+        return response()->json([
+            'status' => [
+                'status' => Status::OK,
+            ],
+            'data' => $data,
+        ]);
     }
 
-    public static function quickError(string $message, array $data = [], int $reason = Response::HTTP_BAD_REQUEST): JsonResponse
+    public static function successOnly(): JsonResponse
     {
-        return self::quick(Status::ERROR, $message, $data, $reason);
+        return response()->json([
+            'status' => [
+                'status' => Status::OK,
+            ],
+        ]);
     }
 
-    public static function quickCreated(string $message, array $data = []): JsonResponse
+    public static function updated(int $id): JsonResponse
     {
-        return self::quick(Status::OK, $message, $data, Response::HTTP_CREATED);
+        return response()->json([
+            'status' => [
+                'status' => Status::OK,
+            ],
+            'data' => [
+                'id' => $id,
+            ],
+        ]);
+    }
+
+    public static function created($data): JsonResponse
+    {
+        return response()->json([
+            'status' => [
+                'status' => Status::OK,
+            ],
+            'data' => $data,
+        ], Response::HTTP_CREATED);
     }
 }

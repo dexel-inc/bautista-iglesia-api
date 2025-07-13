@@ -32,10 +32,11 @@ class TestimonyUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The testimony was updated correctly',
+                ],
+                'data' => [
+                    'id' => $testimony->id,
                 ],
             ]);
 
@@ -67,10 +68,11 @@ class TestimonyUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The testimony was updated correctly',
+                ],
+                'data' => [
+                    'id' => $testimony->id,
                 ],
             ]);
 
