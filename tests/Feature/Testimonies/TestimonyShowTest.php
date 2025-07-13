@@ -21,7 +21,24 @@ class TestimonyShowTest extends TestCase
         $response = $this->getJson(route('testimonies.show', $testimony));
 
         $response->assertOk()
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => [
+                    'id',
+                    'name',
+                    'content',
+                    'image',
+                    'rating',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
             ->assertJson([
+                'status' => [
+                    'status' => 'OK',
+                ],
                 'data' => [
                     'id' => $testimony->id,
                     'name' => 'Juan Pérez',

@@ -6,6 +6,8 @@ use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Missionary;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class MissionaryUpdateTest extends TestCase
@@ -14,17 +16,19 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_updates_missionary_successfully(): void
     {
+        Storage::fake('local');
+
         $missionary = Missionary::factory()->create([
             'title' => 'Misión Original',
             'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
+            'image' => 'missionary/images/original.jpg',
             'disable_at' => '2024-06-01 00:00:00',
         ]);
 
         $updateData = [
             'title' => 'Misión Actualizada',
             'message' => 'Mensaje actualizado',
-            'image' => 'https://example.com/updated.jpg',
+            'image' => UploadedFile::fake()->image('updated.jpg'),
             'disable_at' => '2024-12-31 23:59:59',
         ];
 
@@ -32,10 +36,11 @@ class MissionaryUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The missionary was updated correctly',
+                ],
+                'data' => [
+                    'id' => $missionary->id,
                 ],
             ]);
 
@@ -43,23 +48,29 @@ class MissionaryUpdateTest extends TestCase
             'id' => $missionary->id,
             'title' => 'Misión Actualizada',
             'message' => 'Mensaje actualizado',
-            'image' => 'https://example.com/updated.jpg',
         ]);
+        
+        // Verificamos que se guardó una imagen
+        $updatedMissionary = $missionary->fresh();
+        $this->assertNotNull($updatedMissionary->image);
+        $this->assertStringContainsString('missionary/images/', $updatedMissionary->image);
     }
 
     public function test_it_updates_missionary_partially(): void
     {
+        Storage::fake('local');
+
         $missionary = Missionary::factory()->create([
             'title' => 'Misión Original',
             'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
+            'image' => 'missionary/images/original.jpg',
             'disable_at' => '2024-06-01 00:00:00',
         ]);
 
         $updateData = [
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
+            'image' => UploadedFile::fake()->image('original.jpg'),
             'disable_at' => '2024-06-01 00:00:00',
         ];
 
@@ -67,10 +78,11 @@ class MissionaryUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The missionary was updated correctly',
+                ],
+                'data' => [
+                    'id' => $missionary->id,
                 ],
             ]);
 
@@ -78,16 +90,23 @@ class MissionaryUpdateTest extends TestCase
             'id' => $missionary->id,
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
         ]);
+        
+        // Verificamos que se guardó una imagen
+        $updatedMissionary = $missionary->fresh();
+        $this->assertNotNull($updatedMissionary->image);
+        $this->assertStringContainsString('missionary/images/', $updatedMissionary->image);
     }
 
     public function test_it_validates_string_fields(): void
     {
+        Storage::fake('local');
+
         $missionary = Missionary::factory()->create();
 
         $updateData = [
             'title' => 123,
+            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
@@ -98,26 +117,31 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_validates_field_maximum_lengths(): void
     {
+        Storage::fake('local');
+
         $missionary = Missionary::factory()->create();
 
         $updateData = [
             'title' => str_repeat('a', 256),
             'message' => str_repeat('b', 2001),
-            'image' => str_repeat('c', 256),
+            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['title', 'message', 'image']);
+            ->assertJsonValidationErrors(['title', 'message']);
     }
 
     public function test_it_validates_disable_at_date_format(): void
     {
+        Storage::fake('local');
+
         $missionary = Missionary::factory()->create();
 
         $updateData = [
             'disable_at' => 'invalid-date',
+            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
@@ -128,6 +152,8 @@ class MissionaryUpdateTest extends TestCase
 
     public function test_it_can_set_disable_at_to_null(): void
     {
+        Storage::fake('local');
+
         $missionary = Missionary::factory()->create([
             'disable_at' => '2024-12-31 23:59:59',
         ]);
@@ -135,7 +161,7 @@ class MissionaryUpdateTest extends TestCase
         $updateData = [
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
+            'image' => UploadedFile::fake()->image('original.jpg'),
             'disable_at' => null,
         ];
 
@@ -147,5 +173,24 @@ class MissionaryUpdateTest extends TestCase
             'id' => $missionary->id,
             'disable_at' => null,
         ]);
+    }
+
+    public function test_it_validates_image_file_type(): void
+    {
+        Storage::fake('local');
+
+        $missionary = Missionary::factory()->create();
+
+        $updateData = [
+            'title' => 'Misión válida',
+            'message' => 'Mensaje válido',
+            'image' => UploadedFile::fake()->create('document.pdf', 1024, 'application/pdf'),
+            'disable_at' => '2024-12-31 23:59:59',
+        ];
+
+        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['image']);
     }
 }

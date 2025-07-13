@@ -22,7 +22,24 @@ class MissionaryShowTest extends TestCase
         $response = $this->getJson(route('missionaries.show', $missionary));
 
         $response->assertOk()
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => [
+                    'id',
+                    'title',
+                    'message',
+                    'image',
+                    'disable_at',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
             ->assertJson([
+                'status' => [
+                    'status' => 'OK',
+                ],
                 'data' => [
                     'id' => $missionary->id,
                     'title' => 'Misión en África',

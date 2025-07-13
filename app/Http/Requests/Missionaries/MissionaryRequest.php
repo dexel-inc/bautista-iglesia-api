@@ -16,7 +16,7 @@ class MissionaryRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'max:2000'],
-            'image' => ['required', 'string', 'max:255'],
+            'image' => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'disable_at' => 'date|nullable',
         ];
     }

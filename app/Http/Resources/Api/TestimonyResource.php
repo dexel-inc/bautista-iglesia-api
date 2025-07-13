@@ -18,6 +18,7 @@ class TestimonyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
+            'image' => $this->image,
             'rating' => $this->rating,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

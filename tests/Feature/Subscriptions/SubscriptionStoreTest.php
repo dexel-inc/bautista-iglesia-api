@@ -22,13 +22,29 @@ class SubscriptionStoreTest extends TestCase
 
         $response = $this->postJson(route('subscriptions.store'), $subscriptionData);
 
-        $response->assertOk()
-            ->assertJson([
-                'body' => [
-                    'status' => Status::OK,
-                    'reason' => Response::HTTP_CREATED,
-                    'message' => 'The subscription was created correctly',
+        $response->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
                 ],
+                'data' => [
+                    'id',
+                    'name',
+                    'email',
+                    'phone',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
+            ->assertJson([
+                'status' => [
+                    'status' => Status::OK,
+                ],
+                'data' => [
+                    'name' => 'Juan Pérez',
+                    'email' => 'juan.perez@example.com',
+                    'phone' => '1234567890',
+                ]
             ]);
 
         $this->assertDatabaseHas('subscriptions', [

@@ -24,10 +24,8 @@ class TestimonyDestroyTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'body' => [
+                'status' => [
                     'status' => Status::OK,
-                    'reason' => Response::HTTP_OK,
-                    'message' => 'The testimony was deleted correctly',
                 ],
             ]);
 

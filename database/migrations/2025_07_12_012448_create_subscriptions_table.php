@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('name');
+            $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
         });
     }

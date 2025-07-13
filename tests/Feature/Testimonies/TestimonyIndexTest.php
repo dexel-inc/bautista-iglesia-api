@@ -17,7 +17,13 @@ class TestimonyIndexTest extends TestCase
         $response = $this->getJson(route('testimonies.index'));
 
         $response->assertOk()
-            ->assertJsonCount(3, 'data');
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => []
+            ]);
     }
 
     public function test_it_returns_empty_array_when_no_testimonies_exist(): void
@@ -26,7 +32,12 @@ class TestimonyIndexTest extends TestCase
 
         $response->assertOk()
             ->assertJsonCount(0, 'data')
-            ->assertJson(['data' => []]);
+            ->assertJson([
+                'status' => [
+                    'status' => 'OK'
+                ],
+                'data' => []
+            ]);
     }
 
     public function test_it_returns_testimonies_with_correct_structure(): void
@@ -37,11 +48,15 @@ class TestimonyIndexTest extends TestCase
 
         $response->assertOk()
             ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
                 'data' => [
                     '*' => [
                         'id',
                         'name',
                         'content',
+                        'image',
                         'rating',
                         'created_at',
                         'updated_at'

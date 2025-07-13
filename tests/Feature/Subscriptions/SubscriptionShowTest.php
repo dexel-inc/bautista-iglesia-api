@@ -21,7 +21,23 @@ class SubscriptionShowTest extends TestCase
         $response = $this->getJson(route('subscriptions.show', $subscription));
 
         $response->assertOk()
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => [
+                    'id',
+                    'name',
+                    'email',
+                    'phone',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
             ->assertJson([
+                'status' => [
+                    'status' => 'OK',
+                ],
                 'data' => [
                     'id' => $subscription->id,
                     'name' => 'Juan Pérez',

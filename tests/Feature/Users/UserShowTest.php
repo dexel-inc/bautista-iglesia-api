@@ -22,7 +22,24 @@ class UserShowTest extends TestCase
         $response = $this->getJson(route('users.show', $user));
 
         $response->assertOk()
+            ->assertJsonStructure([
+                'status' => [
+                    'status'
+                ],
+                'data' => [
+                    'id',
+                    'name',
+                    'surname',
+                    'email',
+                    'phone',
+                    'created_at',
+                    'updated_at',
+                ]
+            ])
             ->assertJson([
+                'status' => [
+                    'status' => 'OK',
+                ],
                 'data' => [
                     'id' => $user->id,
                     'name' => 'Juan',
