@@ -2,52 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\StoreContentAction;
-use App\Actions\UpdateContentAction;
+use App\Actions\StoreOrUpdateContentAction;
 use App\Http\Requests\Contents\StoreContentRequest;
-use App\Http\Requests\Contents\UpdateContentRequest;
+use App\Http\Resources\Api\ContentResource;
 use App\Models\Content;
+use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ContentController extends Controller
 {
-    public function index(): array
+    public function index(): AnonymousResourceCollection
     {
-        return Content::all()->toArray();
+        return ContentResource::collection(Content::all());
     }
 
-    public function store(StoreContentRequest $request, StoreContentAction $action): JsonResponse
+    public function store(StoreContentRequest $request, StoreOrUpdateContentAction $action): JsonResponse
     {
-        $action->execute($request->validated());
-
-        return response()->json([
-            'content' => $request->validated(),
-            'message' => 'The content was created correctly',
-        ], 201);
+        $action->execute(new Content(),$request->validated());
+        return ApiResponse::quickCreated('The content was created correctly');
     }
 
-    public function update(UpdateContentRequest $request, Content $content, UpdateContentAction $action): JsonResponse
+    public function update(StoreContentRequest $request, Content $content, StoreOrUpdateContentAction $action): JsonResponse
     {
-        $action->execute($request->validated(), $content);
+        $action->execute($content, $request->validated());
 
-        return response()->json([
-            'content' => $request->validated(),
-            'message' => 'The content was updated correctly',
-        ]);
+        return ApiResponse::quickOk('The content was updated correctly');
     }
 
-    public function show(Content $content): Content
+    public function show(Content $content): ContentResource
     {
-        return $content;
+        return ContentResource::make($content);
     }
 
     public function destroy(Content $content): JsonResponse
     {
         $content->delete();
 
-        return response()->json([
-            'content deleted' => $content,
-            'message' => 'The content was deleted correctly',
-        ]);
+        return ApiResponse::quickOk('The content was deleted correctly');
     }
-} 
+}

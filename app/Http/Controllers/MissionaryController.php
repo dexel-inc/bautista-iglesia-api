@@ -2,52 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\StoreMissionaryAction;
-use App\Actions\UpdateMissionaryAction;
-use App\Http\Requests\Missionaries\StoreMissionaryRequest;
-use App\Http\Requests\Missionaries\UpdateMissionaryRequest;
+use App\Actions\StoreOrUpdateMissionaryAction;
+use App\Http\Requests\Missionaries\MissionaryRequest;
+use App\Http\Resources\Api\MissionaryResource;
 use App\Models\Missionary;
+use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MissionaryController extends Controller
 {
-    public function index(): array
+    public function index(): AnonymousResourceCollection
     {
-        return Missionary::all()->toArray();
+        return MissionaryResource::collection(Missionary::all());
     }
 
-    public function store(StoreMissionaryRequest $request, StoreMissionaryAction $action): JsonResponse
+    public function store(MissionaryRequest $request, StoreOrUpdateMissionaryAction $action): JsonResponse
     {
-        $action->execute($request->validated());
-
-        return response()->json([
-            'missionary' => $request->validated(),
-            'message' => 'The missionary was created correctly',
-        ], 201);
+        $action->execute(new Missionary(), $request->validated());
+        return ApiResponse::quickCreated('The missionary was created correctly');
     }
 
-    public function update(UpdateMissionaryRequest $request, Missionary $missionary, UpdateMissionaryAction $action): JsonResponse
+    public function update(MissionaryRequest $request, Missionary $missionary, StoreOrUpdateMissionaryAction $action): JsonResponse
     {
-        $action->execute($request->validated(), $missionary);
+        $action->execute($missionary, $request->validated());
 
-        return response()->json([
-            'missionary' => $request->validated(),
-            'message' => 'The missionary was updated correctly',
-        ]);
+        return ApiResponse::quickOk('The missionary was updated correctly');
     }
 
-    public function show(Missionary $missionary): Missionary
+    public function show(Missionary $missionary): MissionaryResource
     {
-        return $missionary;
+        return MissionaryResource::make($missionary);
     }
 
     public function destroy(Missionary $missionary): JsonResponse
     {
         $missionary->delete();
 
-        return response()->json([
-            'missionary deleted' => $missionary,
-            'message' => 'The missionary was deleted correctly',
-        ]);
+        return ApiResponse::quickOk('The missionary was deleted correctly');
     }
-} 
+}

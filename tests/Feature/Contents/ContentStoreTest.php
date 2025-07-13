@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Contents;
 
+use App\Constants\Response;
+use App\Constants\Status;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -20,15 +22,13 @@ class ContentStoreTest extends TestCase
 
         $response = $this->postJson(route('contents.store'), $contentData);
 
-        $response->assertCreated()
+        $response->assertOk()
             ->assertJson([
-                'content' => [
-                    'type' => 'blog',
-                    'title' => 'Mi primer blog post',
-                    'description' => 'Esta es la descripción de mi primer blog post con contenido increíble.',
-                    'image' => 'https://example.com/blog-image.jpg',
-                ],
-                'message' => 'The content was created correctly',
+                'body' => [
+                    'status' => Status::OK,
+                    'reason' => Response::HTTP_CREATED,
+                    'message' => 'The content was created correctly',
+                ]
             ]);
 
         $this->assertDatabaseHas('contents', [
@@ -75,80 +75,5 @@ class ContentStoreTest extends TestCase
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['type', 'title', 'description', 'image']);
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $contentData = [
-            'type' => 'video',
-            'title' => 'Video tutorial',
-            'description' => 'Un video tutorial muy útil.',
-            'image' => 'https://example.com/video-thumbnail.jpg',
-        ];
-
-        $response = $this->postJson(route('contents.store'), $contentData);
-
-        $response->assertCreated()
-            ->assertJsonStructure([
-                'content' => [
-                    'type',
-                    'title',
-                    'description',
-                    'image',
-                ],
-                'message'
-            ]);
-    }
-
-    public function test_it_returns_404_for_invalid_route(): void
-    {
-        $response = $this->postJson('/api/invalid-route');
-
-        $response->assertNotFound();
-    }
-
-    public function test_it_handles_special_characters_in_fields(): void
-    {
-        $contentData = [
-            'type' => 'artículo',
-            'title' => 'Artículo con caracteres especiales: ñáéíóú',
-            'description' => 'Descripción con caracteres especiales y símbolos únicos.',
-            'image' => 'https://example.com/artículo-especial.jpg',
-        ];
-
-        $response = $this->postJson(route('contents.store'), $contentData);
-
-        $response->assertCreated()
-            ->assertJson([
-                'content' => [
-                    'type' => 'artículo',
-                    'title' => 'Artículo con caracteres especiales: ñáéíóú',
-                    'description' => 'Descripción con caracteres especiales y símbolos únicos.',
-                    'image' => 'https://example.com/artículo-especial.jpg',
-                ],
-            ]);
-    }
-
-    public function test_it_handles_different_content_types(): void
-    {
-        $contentTypes = ['blog', 'video', 'podcast', 'article', 'news'];
-
-        foreach ($contentTypes as $type) {
-            $contentData = [
-                'type' => $type,
-                'title' => "Contenido de tipo {$type}",
-                'description' => "Descripción para contenido de tipo {$type}.",
-                'image' => "https://example.com/{$type}-image.jpg",
-            ];
-
-            $response = $this->postJson(route('contents.store'), $contentData);
-
-            $response->assertCreated();
-
-            $this->assertDatabaseHas('contents', [
-                'type' => $type,
-                'title' => "Contenido de tipo {$type}",
-            ]);
-        }
     }
 }

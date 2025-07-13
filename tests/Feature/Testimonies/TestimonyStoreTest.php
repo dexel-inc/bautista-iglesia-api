@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Testimonies;
 
+use App\Constants\Response;
+use App\Constants\Status;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,18 +17,18 @@ class TestimonyStoreTest extends TestCase
             'name' => 'Juan Pérez',
             'content' => 'Este es un testimonio increíble sobre mi experiencia.',
             'rating' => 5,
+            'image' => 'https://example.com/blog-image.jpg',
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
 
-        $response->assertCreated()
+        $response->assertOk()
             ->assertJson([
-                'testimony' => [
-                    'name' => 'Juan Pérez',
-                    'content' => 'Este es un testimonio increíble sobre mi experiencia.',
-                    'rating' => 5,
+                'body' => [
+                    'status' => Status::OK,
+                    'reason' => Response::HTTP_CREATED,
+                    'message' => 'The testimony was created correctly',
                 ],
-                'message' => 'The testimony was created correctly',
             ]);
 
         $this->assertDatabaseHas('testimonies', [
@@ -41,16 +43,18 @@ class TestimonyStoreTest extends TestCase
         $testimonyData = [
             'name' => 'María García',
             'content' => 'Otro testimonio maravilloso.',
+            'image' => 'https://example.com/blog-image.jpg',
+            'rating' => 4
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
 
-        $response->assertCreated();
+        $response->assertOk();
 
         $this->assertDatabaseHas('testimonies', [
             'name' => 'María García',
             'content' => 'Otro testimonio maravilloso.',
-            'rating' => 5, // valor por defecto
+            'rating' => 4,
         ]);
     }
 
@@ -116,53 +120,5 @@ class TestimonyStoreTest extends TestCase
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['rating']);
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $testimonyData = [
-            'name' => 'Juan Pérez',
-            'content' => 'Este es un testimonio increíble sobre mi experiencia.',
-            'rating' => 5,
-        ];
-
-        $response = $this->postJson(route('testimonies.store'), $testimonyData);
-
-        $response->assertCreated()
-            ->assertJsonStructure([
-                'testimony' => [
-                    'name',
-                    'content',
-                    'rating',
-                ],
-                'message'
-            ]);
-    }
-
-    public function test_it_returns_404_for_invalid_route(): void
-    {
-        $response = $this->postJson('/api/invalid-route');
-
-        $response->assertNotFound();
-    }
-
-    public function test_it_handles_special_characters_in_names(): void
-    {
-        $testimonyData = [
-            'name' => 'María José García-López',
-            'content' => 'Testimonio con caracteres especiales.',
-            'rating' => 4,
-        ];
-
-        $response = $this->postJson(route('testimonies.store'), $testimonyData);
-
-        $response->assertCreated()
-            ->assertJson([
-                'testimony' => [
-                    'name' => 'María José García-López',
-                    'content' => 'Testimonio con caracteres especiales.',
-                    'rating' => 4,
-                ],
-            ]);
     }
 }

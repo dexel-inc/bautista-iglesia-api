@@ -2,52 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\StoreSubscriptionAction;
-use App\Actions\UpdateSubscriptionAction;
-use App\Http\Requests\Subscriptions\StoreSubscriptionRequest;
-use App\Http\Requests\Subscriptions\UpdateSubscriptionRequest;
+use App\Actions\StoreOrUpdateSubscriptionAction;
+use App\Http\Requests\Subscriptions\SubscriptionRequest;
+use App\Http\Resources\Api\SubscriptionResource;
 use App\Models\Subscription;
+use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class SubscriptionController extends Controller
 {
-    public function index(): array
+    public function index(): AnonymousResourceCollection
     {
-        return Subscription::all()->toArray();
+        return SubscriptionResource::collection(Subscription::all());
     }
 
-    public function store(StoreSubscriptionRequest $request, StoreSubscriptionAction $action): JsonResponse
+    public function store(SubscriptionRequest $request, StoreOrUpdateSubscriptionAction $action): JsonResponse
     {
-        $action->execute($request->validated());
-
-        return response()->json([
-            'subscription' => $request->validated(),
-            'message' => 'The subscription was created correctly',
-        ], 201);
+        $action->execute(new Subscription(), $request->validated());
+        return ApiResponse::quickCreated('The subscription was created correctly');
     }
 
-    public function update(UpdateSubscriptionRequest $request, Subscription $subscription, UpdateSubscriptionAction $action): JsonResponse
+    public function update(SubscriptionRequest $request, Subscription $subscription, StoreOrUpdateSubscriptionAction $action): JsonResponse
     {
-        $action->execute($request->validated(), $subscription);
+        $action->execute($subscription, $request->validated());
 
-        return response()->json([
-            'subscription' => $request->validated(),
-            'message' => 'The subscription was updated correctly',
-        ]);
+        return ApiResponse::quickOk('The subscription was updated correctly');
     }
 
-    public function show(Subscription $subscription): Subscription
+    public function show(Subscription $subscription): SubscriptionResource
     {
-        return $subscription;
+        return SubscriptionResource::make($subscription);
     }
 
     public function destroy(Subscription $subscription): JsonResponse
     {
         $subscription->delete();
 
-        return response()->json([
-            'subscription deleted' => $subscription,
-            'message' => 'The subscription was deleted correctly',
-        ]);
+        return ApiResponse::quickOk('The subscription was deleted correctly');
     }
 } 

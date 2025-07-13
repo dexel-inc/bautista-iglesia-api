@@ -5,7 +5,7 @@ namespace App\Http\Requests\Subscriptions;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateSubscriptionRequest extends FormRequest
+class SubscriptionRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,14 +14,16 @@ class UpdateSubscriptionRequest extends FormRequest
 
     public function rules(): array
     {
+        $subscriptionId = $this->route('subscription');
+
         return [
             'email' => [
-                'sometimes',
+                'required',
                 'email',
-                Rule::unique('subscriptions', 'email')->ignore($this->subscription->id)
+                Rule::unique('subscriptions', 'email')->ignore($subscriptionId),
             ],
-            'phone' => 'sometimes|string',
-            'name' => 'sometimes|string|max:255',
+            'phone' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
         ];
     }
-} 
+}

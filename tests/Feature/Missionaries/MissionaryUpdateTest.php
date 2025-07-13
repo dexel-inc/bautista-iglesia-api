@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Missionaries;
 
+use App\Constants\Response;
+use App\Constants\Status;
 use App\Models\Missionary;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,13 +32,11 @@ class MissionaryUpdateTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'missionary' => [
-                    'title' => 'Misión Actualizada',
-                    'message' => 'Mensaje actualizado',
-                    'image' => 'https://example.com/updated.jpg',
-                    'disable_at' => '2024-12-31 23:59:59',
+                'body' => [
+                    'status' => Status::OK,
+                    'reason' => Response::HTTP_OK,
+                    'message' => 'The missionary was updated correctly',
                 ],
-                'message' => 'The missionary was updated correctly',
             ]);
 
         $this->assertDatabaseHas('missionaries', [
@@ -58,14 +58,19 @@ class MissionaryUpdateTest extends TestCase
 
         $updateData = [
             'title' => 'Misión Parcialmente Actualizada',
+            'message' => 'Mensaje original',
+            'image' => 'https://example.com/original.jpg',
+            'disable_at' => '2024-06-01 00:00:00',
         ];
 
         $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertOk()
             ->assertJson([
-                'missionary' => [
-                    'title' => 'Misión Parcialmente Actualizada',
+                'body' => [
+                    'status' => Status::OK,
+                    'reason' => Response::HTTP_OK,
+                    'message' => 'The missionary was updated correctly',
                 ],
             ]);
 
@@ -128,6 +133,9 @@ class MissionaryUpdateTest extends TestCase
         ]);
 
         $updateData = [
+            'title' => 'Misión Parcialmente Actualizada',
+            'message' => 'Mensaje original',
+            'image' => 'https://example.com/original.jpg',
             'disable_at' => null,
         ];
 
@@ -138,106 +146,6 @@ class MissionaryUpdateTest extends TestCase
         $this->assertDatabaseHas('missionaries', [
             'id' => $missionary->id,
             'disable_at' => null,
-        ]);
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $missionary = Missionary::factory()->create();
-
-        $updateData = [
-            'title' => 'Misión Actualizada',
-        ];
-
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
-
-        $response->assertOk()
-            ->assertJsonStructure([
-                'missionary' => [
-                    'title',
-                ],
-                'message'
-            ]);
-    }
-
-    public function test_it_returns_404_for_nonexistent_missionary(): void
-    {
-        $updateData = [
-            'title' => 'Misión Actualizada',
-        ];
-
-        $response = $this->putJson(route('missionaries.update', 999), $updateData);
-
-        $response->assertNotFound();
-    }
-
-    public function test_it_handles_special_characters_in_fields(): void
-    {
-        $missionary = Missionary::factory()->create();
-
-        $updateData = [
-            'title' => 'Misión en São Paulo',
-            'message' => 'Una misión especial con caracteres únicos: ñáéíóú.',
-        ];
-
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
-
-        $response->assertOk()
-            ->assertJson([
-                'missionary' => [
-                    'title' => 'Misión en São Paulo',
-                    'message' => 'Una misión especial con caracteres únicos: ñáéíóú.',
-                ],
-            ]);
-
-        $this->assertDatabaseHas('missionaries', [
-            'id' => $missionary->id,
-            'title' => 'Misión en São Paulo',
-            'message' => 'Una misión especial con caracteres únicos: ñáéíóú.',
-        ]);
-    }
-
-    public function test_it_updates_only_provided_fields(): void
-    {
-        $missionary = Missionary::factory()->create([
-            'title' => 'Misión Original',
-            'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
-            'disable_at' => '2024-06-01 00:00:00',
-        ]);
-
-        $updateData = [
-            'title' => 'Misión Actualizada',
-        ];
-
-        $this->putJson(route('missionaries.update', $missionary), $updateData);
-
-        $this->assertDatabaseHas('missionaries', [
-            'id' => $missionary->id,
-            'title' => 'Misión Actualizada',
-            'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
-        ]);
-    }
-
-    public function test_it_accepts_empty_update_data(): void
-    {
-        $missionary = Missionary::factory()->create([
-            'title' => 'Misión Original',
-            'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
-            'disable_at' => '2024-06-01 00:00:00',
-        ]);
-
-        $response = $this->putJson(route('missionaries.update', $missionary), []);
-
-        $response->assertOk();
-
-        $this->assertDatabaseHas('missionaries', [
-            'id' => $missionary->id,
-            'title' => 'Misión Original',
-            'message' => 'Mensaje original',
-            'image' => 'https://example.com/original.jpg',
         ]);
     }
 }

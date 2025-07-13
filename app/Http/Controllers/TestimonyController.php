@@ -2,52 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\StoreTestimonyAction;
-use App\Actions\UpdateTestimonyAction;
-use App\Http\Requests\Testimonies\StoreTestimonyRequest;
-use App\Http\Requests\Testimonies\UpdateTestimonyRequest;
+use App\Actions\StoreOrUpdateTestimonyAction;
+use App\Http\Requests\Testimonies\TestimonyRequest;
+use App\Http\Resources\Api\TestimonyResource;
 use App\Models\Testimony;
+use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TestimonyController extends Controller
 {
-    public function index(): array
+    public function index(): AnonymousResourceCollection
     {
-        return Testimony::all()->toArray();
+        return TestimonyResource::collection(Testimony::all());
     }
 
-    public function store(StoreTestimonyRequest $request, StoreTestimonyAction $action): JsonResponse
+    public function store(TestimonyRequest $request, StoreOrUpdateTestimonyAction $action): JsonResponse
     {
-        $action->execute($request->validated());
-
-        return response()->json([
-            'testimony' => $request->validated(),
-            'message' => 'The testimony was created correctly',
-        ], 201);
+        $action->execute(new Testimony(), $request->validated());
+        return ApiResponse::quickCreated('The testimony was created correctly');
     }
 
-    public function update(UpdateTestimonyRequest $request, Testimony $testimony, UpdateTestimonyAction $action): JsonResponse
+    public function update(TestimonyRequest $request, Testimony $testimony, StoreOrUpdateTestimonyAction $action): JsonResponse
     {
-        $action->execute($request->validated(), $testimony);
+        $action->execute($testimony, $request->validated());
 
-        return response()->json([
-            'testimony' => $request->validated(),
-            'message' => 'The testimony was updated correctly',
-        ]);
+        return ApiResponse::quickOk('The testimony was updated correctly');
     }
 
-    public function show(Testimony $testimony): Testimony
+    public function show(Testimony $testimony): TestimonyResource
     {
-        return $testimony;
+        return TestimonyResource::make($testimony);
     }
 
     public function destroy(Testimony $testimony): JsonResponse
     {
         $testimony->delete();
 
-        return response()->json([
-            'testimony deleted' => $testimony,
-            'message' => 'The testimony was deleted correctly',
-        ]);
+        return ApiResponse::quickOk('The testimony was deleted correctly');
     }
 } 

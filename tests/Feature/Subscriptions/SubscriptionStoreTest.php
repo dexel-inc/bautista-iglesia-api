@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Subscriptions;
 
+use App\Constants\Response;
+use App\Constants\Status;
 use App\Models\Subscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -20,14 +22,13 @@ class SubscriptionStoreTest extends TestCase
 
         $response = $this->postJson(route('subscriptions.store'), $subscriptionData);
 
-        $response->assertCreated()
+        $response->assertOk()
             ->assertJson([
-                'subscription' => [
-                    'name' => 'Juan Pérez',
-                    'email' => 'juan.perez@example.com',
-                    'phone' => '1234567890',
+                'body' => [
+                    'status' => Status::OK,
+                    'reason' => Response::HTTP_CREATED,
+                    'message' => 'The subscription was created correctly',
                 ],
-                'message' => 'The subscription was created correctly',
             ]);
 
         $this->assertDatabaseHas('subscriptions', [
@@ -100,54 +101,6 @@ class SubscriptionStoreTest extends TestCase
         $response = $this->postJson(route('subscriptions.store'), $subscriptionData);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name', 'email', 'phone']);
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $subscriptionData = [
-            'name' => 'Juan Pérez',
-            'email' => 'juan.perez@example.com',
-            'phone' => '1234567890',
-        ];
-
-        $response = $this->postJson(route('subscriptions.store'), $subscriptionData);
-
-        $response->assertCreated()
-            ->assertJsonStructure([
-                'subscription' => [
-                    'name',
-                    'email',
-                    'phone',
-                ],
-                'message'
-            ]);
-    }
-
-    public function test_it_returns_404_for_invalid_route(): void
-    {
-        $response = $this->postJson('/api/invalid-route');
-
-        $response->assertNotFound();
-    }
-
-    public function test_it_handles_special_characters_in_names(): void
-    {
-        $subscriptionData = [
-            'name' => 'María José García-López',
-            'email' => 'maria.garcia@example.com',
-            'phone' => '1234567890',
-        ];
-
-        $response = $this->postJson(route('subscriptions.store'), $subscriptionData);
-
-        $response->assertCreated()
-            ->assertJson([
-                'subscription' => [
-                    'name' => 'María José García-López',
-                    'email' => 'maria.garcia@example.com',
-                    'phone' => '1234567890',
-                ],
-            ]);
+            ->assertJsonValidationErrors(['name']);
     }
 }

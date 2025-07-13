@@ -23,10 +23,12 @@ class MissionaryShowTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id' => $missionary->id,
-                'title' => 'Misión en África',
-                'message' => 'Esta es una misión increíble para llevar esperanza a África.',
-                'image' => 'https://example.com/africa-mission.jpg',
+                'data' => [
+                    'id' => $missionary->id,
+                    'title' => 'Misión en África',
+                    'message' => 'Esta es una misión increíble para llevar esperanza a África.',
+                    'image' => 'https://example.com/africa-mission.jpg',
+                ]
             ]);
     }
 
@@ -35,23 +37,5 @@ class MissionaryShowTest extends TestCase
         $response = $this->getJson(route('missionaries.show', 999));
 
         $response->assertNotFound();
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $missionary = Missionary::factory()->create();
-
-        $response = $this->getJson(route('missionaries.show', $missionary));
-
-        $response->assertOk()
-            ->assertJsonStructure([
-                'id',
-                'title',
-                'message',
-                'image',
-                'disable_at',
-                'created_at',
-                'updated_at',
-            ]);
     }
 }

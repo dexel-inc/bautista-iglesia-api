@@ -22,10 +22,12 @@ class SubscriptionShowTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id' => $subscription->id,
-                'name' => 'Juan Pérez',
-                'email' => 'juan.perez@example.com',
-                'phone' => '1234567890',
+                'data' => [
+                    'id' => $subscription->id,
+                    'name' => 'Juan Pérez',
+                    'email' => 'juan.perez@example.com',
+                    'phone' => '1234567890',
+                ]
             ]);
     }
 
@@ -34,22 +36,5 @@ class SubscriptionShowTest extends TestCase
         $response = $this->getJson(route('subscriptions.show', 999));
 
         $response->assertNotFound();
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $subscription = Subscription::factory()->create();
-
-        $response = $this->getJson(route('subscriptions.show', $subscription));
-
-        $response->assertOk()
-            ->assertJsonStructure([
-                'id',
-                'email',
-                'phone',
-                'name',
-                'created_at',
-                'updated_at',
-            ]);
     }
 }

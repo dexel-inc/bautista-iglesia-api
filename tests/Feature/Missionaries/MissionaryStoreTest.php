@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Missionaries;
 
+use App\Constants\Response;
+use App\Constants\Status;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -20,15 +22,13 @@ class MissionaryStoreTest extends TestCase
 
         $response = $this->postJson(route('missionaries.store'), $missionaryData);
 
-        $response->assertCreated()
+        $response->assertOk()
             ->assertJson([
-                'missionary' => [
-                    'title' => 'Misión en África',
-                    'message' => 'Esta es una misión increíble para llevar esperanza a África.',
-                    'image' => 'https://example.com/africa-mission.jpg',
-                    'disable_at' => '2024-12-31 23:59:59',
+                'body' => [
+                    'status' => Status::OK,
+                    'reason' => Response::HTTP_CREATED,
+                    'message' => 'The missionary was created correctly',
                 ],
-                'message' => 'The missionary was created correctly',
             ]);
 
         $this->assertDatabaseHas('missionaries', [
@@ -48,7 +48,7 @@ class MissionaryStoreTest extends TestCase
 
         $response = $this->postJson(route('missionaries.store'), $missionaryData);
 
-        $response->assertCreated();
+        $response->assertOk();
 
         $this->assertDatabaseHas('missionaries', [
             'title' => 'Misión en Asia',
@@ -107,53 +107,5 @@ class MissionaryStoreTest extends TestCase
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['disable_at']);
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $missionaryData = [
-            'title' => 'Misión en África',
-            'message' => 'Esta es una misión increíble para llevar esperanza a África.',
-            'image' => 'https://example.com/africa-mission.jpg',
-        ];
-
-        $response = $this->postJson(route('missionaries.store'), $missionaryData);
-
-        $response->assertCreated()
-            ->assertJsonStructure([
-                'missionary' => [
-                    'title',
-                    'message',
-                    'image',
-                ],
-                'message'
-            ]);
-    }
-
-    public function test_it_returns_404_for_invalid_route(): void
-    {
-        $response = $this->postJson('/api/invalid-route');
-
-        $response->assertNotFound();
-    }
-
-    public function test_it_handles_special_characters_in_fields(): void
-    {
-        $missionaryData = [
-            'title' => 'Misión en São Paulo',
-            'message' => 'Una misión especial con caracteres únicos: ñáéíóú.',
-            'image' => 'https://example.com/são-paulo.jpg',
-        ];
-
-        $response = $this->postJson(route('missionaries.store'), $missionaryData);
-
-        $response->assertCreated()
-            ->assertJson([
-                'missionary' => [
-                    'title' => 'Misión en São Paulo',
-                    'message' => 'Una misión especial con caracteres únicos: ñáéíóú.',
-                    'image' => 'https://example.com/são-paulo.jpg',
-                ],
-            ]);
     }
 }

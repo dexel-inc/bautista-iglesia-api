@@ -2,52 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\StoreUserAction;
-use App\Actions\UpdateUserAction;
-use App\Http\Requests\Users\StoreUserRequest;
-use App\Http\Requests\Users\UpdateUserRequest;
+use App\Actions\StoreOrUpdateUserAction;
+use App\Http\Requests\Users\UserRequest;
+use App\Http\Resources\Api\UserResource;
 use App\Models\User;
+use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
-    public function index(): array
+    public function index(): AnonymousResourceCollection
     {
-        return User::all()->toArray();
+        return UserResource::collection(User::all());
     }
 
-    public function store(StoreUserRequest $request, StoreUserAction $action): JsonResponse
+    public function store(UserRequest $request, StoreOrUpdateUserAction $action): JsonResponse
     {
-        $action->execute($request->validated());
-
-        return response()->json([
-            'user' => $request->validated(),
-            'message' => 'The user was created correctly',
-        ], 201);
+        $action->execute(new User(), $request->validated());
+        return ApiResponse::quickCreated('The user was created correctly');
     }
 
-    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): JsonResponse
+    public function update(UserRequest $request, User $user, StoreOrUpdateUserAction $action): JsonResponse
     {
-        $action->execute($request->validated(), $user);
+        $action->execute($user, $request->validated());
 
-        return response()->json([
-            'user' => $request->validated(),
-            'message' => 'The user was created correctly',
-        ]);
+        return ApiResponse::quickOk('The user was updated correctly');
     }
 
-    public function show(User $user): User
+    public function show(User $user): UserResource
     {
-        return $user;
+        return UserResource::make($user);
     }
 
     public function destroy(User $user): JsonResponse
     {
         $user->delete();
 
-        return response()->json([
-            'user deleted' => $user,
-            'message' => 'The user was deleted correctly',
-        ]);
+        return ApiResponse::quickOk('The user was deleted correctly');
     }
 }

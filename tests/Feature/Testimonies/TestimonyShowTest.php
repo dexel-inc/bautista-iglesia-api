@@ -22,10 +22,12 @@ class TestimonyShowTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id' => $testimony->id,
-                'name' => 'Juan Pérez',
-                'content' => 'Este es un testimonio increíble sobre mi experiencia.',
-                'rating' => 5,
+                'data' => [
+                    'id' => $testimony->id,
+                    'name' => 'Juan Pérez',
+                    'content' => 'Este es un testimonio increíble sobre mi experiencia.',
+                    'rating' => 5,
+                ]
             ]);
     }
 
@@ -34,22 +36,5 @@ class TestimonyShowTest extends TestCase
         $response = $this->getJson(route('testimonies.show', 999));
 
         $response->assertNotFound();
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $testimony = Testimony::factory()->create();
-
-        $response = $this->getJson(route('testimonies.show', $testimony));
-
-        $response->assertOk()
-            ->assertJsonStructure([
-                'id',
-                'name',
-                'content',
-                'rating',
-                'created_at',
-                'updated_at',
-            ]);
     }
 }

@@ -23,11 +23,13 @@ class UserShowTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id' => $user->id,
-                'name' => 'Juan',
-                'surname' => 'Pérez',
-                'email' => 'juan.perez@example.com',
-                'phone' => '1234567890',
+                'data' => [
+                    'id' => $user->id,
+                    'name' => 'Juan',
+                    'surname' => 'Pérez',
+                    'email' => 'juan.perez@example.com',
+                    'phone' => '1234567890',
+                ]
             ]);
     }
 
@@ -36,24 +38,5 @@ class UserShowTest extends TestCase
         $response = $this->getJson(route('users.show', 999));
 
         $response->assertNotFound();
-    }
-
-    public function test_it_returns_correct_response_structure(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->getJson(route('users.show', $user));
-
-        $response->assertOk()
-            ->assertJsonStructure([
-                'id',
-                'name',
-                'surname',
-                'email',
-                'phone',
-                'email_verified_at',
-                'created_at',
-                'updated_at',
-            ]);
     }
 }
