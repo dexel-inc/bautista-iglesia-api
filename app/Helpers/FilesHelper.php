@@ -9,11 +9,11 @@ class FilesHelper
 {
     public static function save(string $path, UploadedFile $file): string
     {
-        $disk = config('filesystems.default');
-        $fileName = $file->hashName();
+        return Storage::disk(config('filesystems.default'))->putFileAs($path, $file, $file->hashName());
+    }
 
-        $filePath = Storage::disk($disk)->putFileAs($path, $file, $fileName);
-
-        return $filePath;
+    public static function get(string $path): string
+    {
+        return Storage::disk(config('filesystems.default'))->url($path);
     }
 }

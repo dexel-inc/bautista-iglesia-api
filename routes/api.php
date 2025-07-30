@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ContentController;
 use App\Http\Controllers\MissionaryController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TestimonyController;
@@ -22,7 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('subscriptions', SubscriptionController::class);
     Route::patch('subscriptions/{subscription}/toggle', [SubscriptionController::class, 'toggle'])->name('subscriptions.toggle');
-    Route::apiResource('testimonies', TestimonyController::class);
+    Route::apiResource('testimonies', TestimonyController::class)->except('update');
+    Route::post('testimonies/{testimony}/edit', [TestimonyController::class, 'update'])->name('subscriptions.toggle');
+
     Route::apiResource('missionaries', MissionaryController::class);
-    Route::apiResource('contents', ContentController::class);
 });
