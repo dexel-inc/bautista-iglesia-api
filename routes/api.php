@@ -22,7 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('subscriptions', SubscriptionController::class);
     Route::patch('subscriptions/{subscription}/toggle', [SubscriptionController::class, 'toggle'])->name('subscriptions.toggle');
     Route::apiResource('testimonies', TestimonyController::class)->except('update');
-    Route::post('testimonies/{testimony}/edit', [TestimonyController::class, 'update'])->name('subscriptions.toggle');
+    Route::post('testimonies/{testimony}/edit', [TestimonyController::class, 'update'])->name('testimonies.update');
 
-    Route::apiResource('missionaries', MissionaryController::class);
+    Route::apiResource('missionaries', MissionaryController::class)->except('update');
+    Route::post('missionaries/{missionary}/edit', [MissionaryController::class, 'update'])->name('missionaries.update');
+
 });

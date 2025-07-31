@@ -14,10 +14,12 @@ class UpdateMissionaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:2000'],
-            'image' => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'disable_at' => 'date|nullable',
+            'title' => ['sometimes', 'string', 'max:255'],
+            'message' => ['sometimes', 'string', 'max:2000'],
+            'contact_email' => ['sometimes', 'string', 'max:50'],
+            'contact_name' => ['sometimes', 'string', 'max:50'],
+            'image' => ['sometimes', 'file', 'mimes:jpeg,png,jpg,gif,svg'],
+            'disable_at' => 'sometimes|date|nullable',
         ];
     }
-} 
+}

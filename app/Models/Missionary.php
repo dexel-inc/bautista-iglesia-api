@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $message
  * @property string $image
+ * @property string $contact_email
+ * @property string $contact_name
  * @property string $disable_at
  */
 class Missionary extends Model
@@ -19,6 +21,8 @@ class Missionary extends Model
         'title',
         'message',
         'image',
+        'contact_name',
+        'contact_email',
         'disable_at'
     ];
 
