@@ -4,6 +4,7 @@ use App\Http\Controllers\MissionaryController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TestimonyController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisitController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Users\AuthController;
 
@@ -26,5 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('missionaries', MissionaryController::class)->except('update');
     Route::post('missionaries/{missionary}/edit', [MissionaryController::class, 'update'])->name('missionaries.update');
-
+    Route::post('/visits/stats', [VisitController::class, 'stats']);
 });
+
+Route::post('/visits', [VisitController::class, 'store']);
