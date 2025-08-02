@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $contact_email
  * @property string $contact_name
  * @property string $disable_at
+ * @property ?integer $order
  */
 class Missionary extends Model
 {
@@ -23,6 +24,7 @@ class Missionary extends Model
         'image',
         'contact_name',
         'contact_email',
+        'order',
         'disable_at'
     ];
 

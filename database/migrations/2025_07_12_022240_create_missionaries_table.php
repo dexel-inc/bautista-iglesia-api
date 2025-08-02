@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('missionaries', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('message');
+            $table->text('message')->nullable();
+            $table->integer('order')->nullable();
             $table->string('image');
             $table->timestamp('disable_at')->nullable();
             $table->timestamps();

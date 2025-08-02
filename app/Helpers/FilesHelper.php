@@ -16,4 +16,9 @@ class FilesHelper
     {
         return Storage::disk(config('filesystems.default'))->url($path);
     }
+
+    public static function delete(string $path): bool
+    {
+        return Storage::delete($path);
+    }
 }

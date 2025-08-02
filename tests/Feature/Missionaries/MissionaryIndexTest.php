@@ -61,7 +61,7 @@ class MissionaryIndexTest extends BaseTestCase
                         'title',
                         'message',
                         'image',
-                        'disable_at',
+                        'isEnabled',
                         'created_at',
                         'updated_at'
                     ]

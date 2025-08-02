@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Missionaries;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class UpdateMissionaryRequest extends FormRequest
 {
@@ -16,10 +17,21 @@ class UpdateMissionaryRequest extends FormRequest
         return [
             'title' => ['sometimes', 'string', 'max:255'],
             'message' => ['sometimes', 'string', 'max:2000'],
-            'contact_email' => ['sometimes', 'string', 'max:50'],
-            'contact_name' => ['sometimes', 'string', 'max:50'],
+            'contact_email' => ['nullable', 'string', 'max:50'],
+            'contact_name' => ['nullable', 'string', 'max:50'],
             'image' => ['sometimes', 'file', 'mimes:jpeg,png,jpg,gif,svg'],
-            'disable_at' => 'sometimes|date|nullable',
+            'isEnabled' => 'sometimes|boolean|nullable',
         ];
+    }
+
+
+    protected function prepareForValidation(): void
+    {
+        Log::info('en el request', ['is ENabled' => $this->get('isEnabled')]);
+        if($this->get('isEnabled')) {
+            $this->merge([
+                'isEnabled' => $this->get('isEnabled') === 'true',
+            ]);
+        }
     }
 }

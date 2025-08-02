@@ -24,9 +24,10 @@ class MissionaryResource extends JsonResource
                 'email' => $this->contact_email
             ],
             'image' => FilesHelper::get($this->image),
-            'disable_at' => $this->disable_at,
+            'isEnabled' => !$this->disable_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
     }
+
 }

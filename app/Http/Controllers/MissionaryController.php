@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\StoreOrUpdateMissionaryAction;
+use App\Helpers\FilesHelper;
 use App\Http\Requests\Missionaries\MissionaryRequest;
 use App\Http\Requests\Missionaries\UpdateMissionaryRequest;
 use App\Http\Resources\Api\MissionaryResource;
@@ -14,7 +15,7 @@ class MissionaryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $missionaries = Missionary::all();
+        $missionaries = Missionary::orderBy('order')->get();
         return ApiResponse::successWithData(MissionaryResource::collection($missionaries));
     }
 
@@ -27,7 +28,7 @@ class MissionaryController extends Controller
     public function update(UpdateMissionaryRequest $request, Missionary $missionary, StoreOrUpdateMissionaryAction $action): JsonResponse
     {
         $action->execute($missionary, $request->validated());
-        return ApiResponse::updated($missionary->id);
+        return ApiResponse::updated(MissionaryResource::make($missionary));
     }
 
     public function show(Missionary $missionary): JsonResponse
@@ -37,6 +38,7 @@ class MissionaryController extends Controller
 
     public function destroy(Missionary $missionary): JsonResponse
     {
+        FilesHelper::delete($missionary->image);
         $missionary->delete();
         return ApiResponse::successOnly();
     }

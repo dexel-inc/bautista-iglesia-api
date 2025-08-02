@@ -15,11 +15,20 @@ class MissionaryRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:2000'],
-            'contact_email' => ['required', 'string', 'max:50'],
-            'contact_name' => ['required', 'string', 'max:50'],
+            'message' => ['sometimes', 'string', 'max:2000'],
+            'contact_email' => ['nullable', 'string', 'max:50'],
+            'contact_name' => ['nullable', 'string', 'max:50'],
             'image' => ['required', 'file', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'disable_at' => 'date|nullable',
+            'isEnabled' => 'sometimes|boolean',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if($this->get('isEnabled')) {
+            $this->merge([
+                'isEnabled' => $this->get('isEnabled') === 'true',
+            ]);
+        }
     }
 }

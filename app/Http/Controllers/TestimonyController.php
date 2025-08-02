@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\StoreOrUpdateTestimonyAction;
+use App\Helpers\FilesHelper;
 use App\Http\Requests\Testimonies\TestimonyRequest;
 use App\Http\Requests\Testimonies\UpdateTestimonyRequest;
 use App\Http\Resources\Api\TestimonyResource;
@@ -37,7 +38,9 @@ class TestimonyController extends Controller
 
     public function destroy(Testimony $testimony): JsonResponse
     {
+        FilesHelper::delete($testimony->image);
         $testimony->delete();
+
         return ApiResponse::successOnly();
     }
-} 
+}

@@ -37,15 +37,13 @@ abstract class ApiResponse
         ]);
     }
 
-    public static function updated(int $id): JsonResponse
+    public static function updated($data): JsonResponse
     {
         return response()->json([
             'status' => [
                 'status' => Status::OK,
             ],
-            'data' => [
-                'id' => $id,
-            ],
+            'data' => $data,
         ]);
     }
 
