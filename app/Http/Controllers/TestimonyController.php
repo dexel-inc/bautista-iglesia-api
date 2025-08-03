@@ -27,7 +27,7 @@ class TestimonyController extends Controller
     public function update(UpdateTestimonyRequest $request, Testimony $testimony, StoreOrUpdateTestimonyAction $action): JsonResponse
     {
         $action->execute($testimony, $request->validated());
-        return ApiResponse::updated($testimony->id);
+        return ApiResponse::updated($testimony);
     }
 
     public function show(Testimony $testimony): JsonResponse
