@@ -12,12 +12,6 @@ class StoreOrUpdateTestimonyAction
         $testimony->name = $data['name'] ?? $testimony->name;
         $testimony->content = $data['content'] ?? $testimony->content;
         $testimony->rating = $data['rating'] ?? '5';
-
-        if (isset($data['image'])) {
-            $imagePath = FilesHelper::save('testimony/images', $data['image']);
-            $testimony->image = $imagePath;
-        }
-
         $testimony->save();
 
         return $testimony;

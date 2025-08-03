@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api;
 
-use App\Helpers\FilesHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +18,6 @@ class TestimonyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
-            'image' => FilesHelper::get($this->image),
             'rating' => $this->rating,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

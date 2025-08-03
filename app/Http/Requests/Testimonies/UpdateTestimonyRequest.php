@@ -15,7 +15,6 @@ class UpdateTestimonyRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'image' => ['sometimes', 'file', 'mimes:jpeg,png,jpg,gif,svg'],
             'content' => ['sometimes', 'string', 'max:1000'],
             'rating' => 'sometimes|integer|min:1|max:5',
         ];
