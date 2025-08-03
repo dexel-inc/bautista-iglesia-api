@@ -45,4 +45,4 @@ class SubscriptionController extends Controller
         $subscription->toggle();
         return ApiResponse::updated($subscription->id);
     }
-} 
+}
