@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MissionaryController;
+use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PrayLetterController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TestimonyController;
@@ -29,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('missionaries', MissionaryController::class)->except('update');
     Route::post('missionaries/{missionary}/edit', [MissionaryController::class, 'update'])->name('missionaries.update');
     Route::post('pray-letters/send', [PrayLetterController::class, 'send'])->name('pray-letters.send');
+    Route::post('newsletters/send', [NewsLetterController::class, 'send'])->name('newsletters.send');
     Route::post('/visits/stats', [VisitController::class, 'stats']);
 });
 
