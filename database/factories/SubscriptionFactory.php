@@ -18,8 +18,6 @@ class SubscriptionFactory extends Factory
     {
         return [
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->phoneNumber(),
-            'name' => fake()->name(),
         ];
     }
 } 

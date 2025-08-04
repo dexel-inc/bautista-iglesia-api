@@ -15,9 +15,7 @@ class SubscriptionToggleTest extends BaseTestCase
         $this->actingAsUser();
 
         $subscription = Subscription::factory()->create([
-            'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
-            'phone' => '1234567890',
             'disabled_at' => null,
         ]);
 
@@ -28,9 +26,7 @@ class SubscriptionToggleTest extends BaseTestCase
                 'status' => [
                     'status' => Status::OK,
                 ],
-                'data' => [
-                    'id' => $subscription->id,
-                ],
+                'data' => $subscription->id,
             ]);
 
         $this->assertDatabaseMissing('subscriptions', [
@@ -44,9 +40,7 @@ class SubscriptionToggleTest extends BaseTestCase
         $this->actingAsUser();
 
         $subscription = Subscription::factory()->create([
-            'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
-            'phone' => '1234567890',
             'disabled_at' => now(),
         ]);
 
@@ -57,9 +51,7 @@ class SubscriptionToggleTest extends BaseTestCase
                 'status' => [
                     'status' => Status::OK,
                 ],
-                'data' => [
-                    'id' => $subscription->id,
-                ],
+                'data' => $subscription->id,
             ]);
 
         $this->assertDatabaseHas('subscriptions', [

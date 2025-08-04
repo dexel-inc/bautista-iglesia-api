@@ -22,7 +22,7 @@ Route::name('auth.')->prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
-    Route::apiResource('subscriptions', SubscriptionController::class);
+    Route::apiResource('subscriptions', SubscriptionController::class)->except('store');
     Route::patch('subscriptions/{subscription}/toggle', [SubscriptionController::class, 'toggle'])->name('subscriptions.toggle');
     Route::apiResource('testimonies', TestimonyController::class)->except('update');
     Route::post('testimonies/{testimony}/edit', [TestimonyController::class, 'update'])->name('testimonies.update');
@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/visits/stats', [VisitController::class, 'stats']);
 });
 
+Route::post('subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
 Route::post('/visits', [VisitController::class, 'store']);
 Route::get('/testimonies', [\App\Http\Controllers\Public\TestimonyController::class, 'index'])->name('testimonies.index');
 Route::get('/missionaries', [\App\Http\Controllers\Public\MissionaryController::class, 'index'])->name('missionaries.index');

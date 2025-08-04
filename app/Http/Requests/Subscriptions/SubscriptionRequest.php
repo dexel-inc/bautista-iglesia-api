@@ -22,8 +22,6 @@ class SubscriptionRequest extends FormRequest
                 'email',
                 Rule::unique('subscriptions', 'email')->ignore($subscriptionId),
             ],
-            'phone' => ['required', 'string'],
-            'name' => ['required', 'string', 'max:255'],
         ];
     }
 }
