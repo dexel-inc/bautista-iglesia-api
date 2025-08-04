@@ -59,8 +59,6 @@ class SubscriptionIndexTest extends BaseTestCase
                     '*' => [
                         'id',
                         'email',
-                        'phone',
-                        'name',
                         'created_at',
                         'updated_at'
                     ]

@@ -15,9 +15,7 @@ class SubscriptionDestroyTest extends BaseTestCase
         $this->actingAsUser();
 
         $subscription = Subscription::factory()->create([
-            'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
-            'phone' => '1234567890',
         ]);
 
         $response = $this->deleteJson(route('subscriptions.destroy', $subscription));

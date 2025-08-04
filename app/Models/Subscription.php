@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $email
- * @property string $phone
- * @property string $name
  */
 class Subscription extends Model
 {
@@ -16,8 +14,6 @@ class Subscription extends Model
 
     protected $fillable = [
         'email',
-        'phone',
-        'name',
         'disabled_at'
     ];
 

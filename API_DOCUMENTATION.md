@@ -1,8 +1,10 @@
-# API de Autenticación - Bautista Iglesia
+# API de Bautista Iglesia
 
 ## Endpoints Disponibles
 
-### Registro de Usuario
+### Autenticación
+
+#### Registro de Usuario
 ```http
 POST /api/auth/register
 ```
@@ -31,7 +33,7 @@ POST /api/auth/register
 }
 ```
 
-### Inicio de Sesión
+#### Inicio de Sesión
 ```http
 POST /api/auth/login
 ```
@@ -59,7 +61,7 @@ POST /api/auth/login
 }
 ```
 
-### Obtener Perfil de Usuario (Autenticado)
+#### Obtener Perfil de Usuario (Autenticado)
 ```http
 GET /api/auth/me
 ```
@@ -82,7 +84,7 @@ Authorization: Bearer {token}
 }
 ```
 
-### Cerrar Sesión (Autenticado)
+#### Cerrar Sesión (Autenticado)
 ```http
 POST /api/auth/logout
 ```
@@ -99,6 +101,206 @@ Authorization: Bearer {token}
 }
 ```
 
+### Comunicaciones
+
+#### Enviar Carta de Oración (Pray Letter)
+```http
+POST /api/pray-letters/send
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+```
+
+**Parámetros:**
+```json
+{
+    "subject": "string (requerido, max:255)",
+    "description": "string (requerido)",
+    "file": "file (requerido, pdf, max:10MB)"
+}
+```
+
+**Descripción:**
+- Envía una carta de oración a todos los misioneros activos
+- El archivo es **requerido** y debe ser PDF
+- Se envía por email con diseño profesional y colores desérticos
+- Incluye logo configurable de la iglesia
+- Footer con información de Dexel Inc.
+
+**Respuesta exitosa (200):**
+```json
+{
+    "status": {
+        "status": "OK"
+    }
+}
+```
+
+#### Enviar Newsletter
+```http
+POST /api/newsletters/send
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+```
+
+**Parámetros:**
+```json
+{
+    "subject": "string (requerido, max:255)",
+    "description": "string (requerido)",
+    "file": "file (opcional, pdf/doc/docx, max:10MB)"
+}
+```
+
+**Descripción:**
+- Envía un newsletter a todos los subscriptores activos
+- El archivo es **opcional** y acepta PDF, DOC, DOCX
+- Sistema de batching automático (lotes de 50 emails para evitar límites de Gmail)
+- Mismo diseño profesional que las cartas de oración
+- Logo configurable y footer con información de Dexel Inc.
+- Manejo eficiente de listas grandes de subscriptores
+
+**Respuesta exitosa (200):**
+```json
+{
+    "status": {
+        "status": "OK"
+    }
+}
+```
+
+### Gestión de Usuarios (Autenticado)
+
+#### Listar Usuarios
+```http
+GET /api/users
+```
+
+#### Crear Usuario
+```http
+POST /api/users
+```
+
+#### Mostrar Usuario
+```http
+GET /api/users/{id}
+```
+
+#### Actualizar Usuario
+```http
+PUT /api/users/{id}
+```
+
+#### Eliminar Usuario
+```http
+DELETE /api/users/{id}
+```
+
+### Gestión de Subscripciones (Autenticado)
+
+#### Listar Subscripciones
+```http
+GET /api/subscriptions
+```
+
+#### Crear Subscripción
+```http
+POST /api/subscriptions
+```
+
+#### Mostrar Subscripción
+```http
+GET /api/subscriptions/{id}
+```
+
+#### Actualizar Subscripción
+```http
+PUT /api/subscriptions/{id}
+```
+
+#### Eliminar Subscripción
+```http
+DELETE /api/subscriptions/{id}
+```
+
+#### Toggle Subscripción
+```http
+PATCH /api/subscriptions/{id}/toggle
+```
+
+### Gestión de Testimonios (Autenticado)
+
+#### Listar Testimonios
+```http
+GET /api/testimonies
+```
+
+#### Crear Testimonio
+```http
+POST /api/testimonies
+```
+
+#### Mostrar Testimonio
+```http
+GET /api/testimonies/{id}
+```
+
+#### Actualizar Testimonio
+```http
+POST /api/testimonies/{id}/edit
+```
+
+#### Eliminar Testimonio
+```http
+DELETE /api/testimonies/{id}
+```
+
+### Gestión de Misioneros (Autenticado)
+
+#### Listar Misioneros
+```http
+GET /api/missionaries
+```
+
+#### Crear Misionero
+```http
+POST /api/missionaries
+```
+
+#### Mostrar Misionero
+```http
+GET /api/missionaries/{id}
+```
+
+#### Actualizar Misionero
+```http
+POST /api/missionaries/{id}/edit
+```
+
+#### Eliminar Misionero
+```http
+DELETE /api/missionaries/{id}
+```
+
+### Visitas
+
+#### Registrar Visita
+```http
+POST /api/visits
+```
+
+#### Estadísticas de Visitas (Autenticado)
+```http
+POST /api/visits/stats
+```
+
 ## Códigos de Error
 
 - **401 Unauthorized**: Token no válido o no proporcionado
@@ -112,4 +314,23 @@ Authorization: Bearer {token}
 
 ## Autenticación
 
-La API utiliza Laravel Sanctum para la autenticación basada en tokens. Incluye el token en el header `Authorization` como `Bearer {token}` para endpoints protegidos. 
+La API utiliza Laravel Sanctum para la autenticación basada en tokens. Incluye el token en el header `Authorization` como `Bearer {token}` para endpoints protegidos.
+
+## Características Especiales
+
+### Sistema de Emails
+- **Diseño profesional** con colores desérticos (marrón, beige, dorado)
+- **Logo configurable** mediante variable de entorno `CHURCH_LOGO_URL`
+- **Footer con información** de Dexel Inc. (sitio web, email, teléfono)
+- **Responsive design** para diferentes dispositivos
+
+### Batching de Emails
+- **Newsletters**: Sistema automático de lotes de 50 emails para evitar límites de Gmail
+- **Logging detallado** de cada lote enviado
+- **Manejo eficiente** de listas grandes de subscriptores
+
+### Archivos Adjuntos
+- **Pray Letters**: Archivo PDF requerido
+- **Newsletters**: Archivo opcional (PDF, DOC, DOCX)
+- **Límite**: 10MB por archivo
+- **Limpieza automática** de archivos temporales 

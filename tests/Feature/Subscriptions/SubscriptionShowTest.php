@@ -13,9 +13,7 @@ class SubscriptionShowTest extends BaseTestCase
         $this->actingAsUser();
 
         $subscription = Subscription::factory()->create([
-            'name' => 'Juan Pérez',
             'email' => 'juan.perez@example.com',
-            'phone' => '1234567890',
         ]);
 
         $response = $this->getJson(route('subscriptions.show', $subscription));
@@ -27,9 +25,7 @@ class SubscriptionShowTest extends BaseTestCase
                 ],
                 'data' => [
                     'id',
-                    'name',
                     'email',
-                    'phone',
                     'created_at',
                     'updated_at',
                 ]
@@ -40,9 +36,7 @@ class SubscriptionShowTest extends BaseTestCase
                 ],
                 'data' => [
                     'id' => $subscription->id,
-                    'name' => 'Juan Pérez',
                     'email' => 'juan.perez@example.com',
-                    'phone' => '1234567890',
                 ]
             ]);
     }
