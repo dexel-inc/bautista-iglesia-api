@@ -33,3 +33,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('/visits', [VisitController::class, 'store']);
+Route::get('/testimonies', [\App\Http\Controllers\Public\TestimonyController::class, 'index'])->name('testimonies.index');
+Route::get('/missionaries', [\App\Http\Controllers\Public\MissionaryController::class, 'index'])->name('missionaries.index');
