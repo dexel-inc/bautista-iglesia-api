@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\StoreOrUpdateSubscriptionAction;
 use App\Http\Requests\Subscriptions\SubscriptionRequest;
+use App\Http\Requests\Subscriptions\UpdateSubscriptionRequest;
 use App\Http\Resources\Api\SubscriptionResource;
 use App\Models\Subscription;
 use App\Responses\ApiResponse;
@@ -23,7 +24,7 @@ class SubscriptionController extends Controller
         return ApiResponse::created(SubscriptionResource::make($subscription));
     }
 
-    public function update(SubscriptionRequest $request, Subscription $subscription, StoreOrUpdateSubscriptionAction $action): JsonResponse
+    public function update(UpdateSubscriptionRequest $request, Subscription $subscription, StoreOrUpdateSubscriptionAction $action): JsonResponse
     {
         $action->execute($subscription, $request->validated());
         return ApiResponse::updated($subscription->id);
