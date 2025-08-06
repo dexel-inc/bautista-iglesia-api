@@ -2,13 +2,12 @@
 
 namespace Tests\Feature\Subscriptions;
 
-use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Subscription;
 
 use Tests\BaseTestCase;
 
-class SubscriptionToggleTest extends BaseTestCase
+class SubscriptionUpdateTest extends BaseTestCase
 {
     public function test_it_disables_enabled_subscription(): void
     {

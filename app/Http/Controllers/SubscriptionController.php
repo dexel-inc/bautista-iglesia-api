@@ -39,10 +39,4 @@ class SubscriptionController extends Controller
         $subscription->delete();
         return ApiResponse::successOnly();
     }
-
-    public function toggle(Subscription $subscription): JsonResponse
-    {
-        $subscription->toggle();
-        return ApiResponse::updated($subscription->id);
-    }
 }
