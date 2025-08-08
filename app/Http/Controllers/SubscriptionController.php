@@ -27,7 +27,7 @@ class SubscriptionController extends Controller
     public function update(UpdateSubscriptionRequest $request, Subscription $subscription, StoreOrUpdateSubscriptionAction $action): JsonResponse
     {
         $action->execute($subscription, $request->validated());
-        return ApiResponse::updated($subscription->id);
+        return ApiResponse::updated(SubscriptionResource::make($subscription));
     }
 
     public function show(Subscription $subscription): JsonResponse
