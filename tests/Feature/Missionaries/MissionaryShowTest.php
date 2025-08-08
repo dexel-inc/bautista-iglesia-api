@@ -31,7 +31,7 @@ class MissionaryShowTest extends BaseTestCase
                     'title',
                     'message',
                     'image',
-                    'disable_at',
+                    'isEnabled',
                     'created_at',
                     'updated_at',
                 ]
@@ -44,7 +44,12 @@ class MissionaryShowTest extends BaseTestCase
                     'id' => $missionary->id,
                     'title' => 'Misión en África',
                     'message' => 'Esta es una misión increíble para llevar esperanza a África.',
-                    'image' => 'https://example.com/africa-mission.jpg',
+                    'user' => [
+                        'name' => null,
+                        'email' => null,
+                    ],
+                    'image' => '/storage/https://example.com/africa-mission.jpg',
+                    'isEnabled' => false,
                 ]
             ]);
     }

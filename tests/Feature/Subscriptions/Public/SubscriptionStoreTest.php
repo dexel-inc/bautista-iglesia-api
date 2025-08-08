@@ -1,11 +1,10 @@
 <?php
 
-namespace Tests\Feature\Subscriptions;
+namespace Tests\Feature\Subscriptions\Public;
 
 use App\Constants\Response;
 use App\Constants\Status;
 use App\Models\Subscription;
-
 use Tests\BaseTestCase;
 
 class SubscriptionStoreTest extends BaseTestCase

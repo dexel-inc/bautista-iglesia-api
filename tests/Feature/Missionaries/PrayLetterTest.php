@@ -8,10 +8,12 @@ use App\Jobs\SendPrayLetterJob;
 use App\Mail\PrayLetterMail;
 use App\Models\Missionary;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Tests\BaseTestCase;
+use Illuminate\Support\Facades\Config;
 
 class PrayLetterTest extends BaseTestCase
 {
@@ -21,11 +23,6 @@ class PrayLetterTest extends BaseTestCase
         Storage::fake('local');
         Queue::fake();
         Mail::fake();
-
-        $missionary = Missionary::factory()->create([
-            'contact_email' => 'missionary@example.com',
-            'disable_at' => null,
-        ]);
 
         $prayLetterData = [
             'subject' => 'Carta de Oración - Enero 2024',
@@ -53,7 +50,7 @@ class PrayLetterTest extends BaseTestCase
     public function test_it_validates_required_fields(): void
     {
         $this->actingAsUser();
-        $response = $this->postJson(route('pray-letters.send'), []);
+        $response = $this->postJson(route('pray-letters.send'));
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['subject', 'file']);
@@ -149,4 +146,79 @@ class PrayLetterTest extends BaseTestCase
         Mail::assertNothingSent();
         $this->assertFalse(Storage::disk('local')->exists($filePath));
     }
+//    public function test_sendsPrayLetterToMissionaries(): void
+//    {
+//        Mail::fake();
+//        Log::spy();
+//
+//        Missionary::factory()->count(3)->create(['contact_email' => 'test@example.com']);
+//        config()->set('mail.from.address', 'sender@example.com');
+//
+//        $job = new SendPrayLetterJob('Subject', 'Description', '/path/to/file');
+//        $job->handle();
+//
+//        Mail::assertSent(PrayLetterMail::class, function ($mail) {
+//            return $mail->hasTo('sender@example.com') &&
+//                $mail->bcc === ['test@example.com', 'test@example.com', 'test@example.com'];
+//        });
+//
+//        Log::shouldHaveReceived('info')->with('Pray letter sent successfully to 3 missionaries in a single email');
+//    }
+//
+//    public function test_doesNotSendPrayLetterWhenNoMissionaries()
+//    {
+//        Mail::fake();
+//        Log::spy();
+//
+//        $job = new SendPrayLetterJob('Subject', 'Description', '/path/to/file');
+//        $job->handle();
+//
+//        Mail::assertNothingSent();
+//        Log::shouldHaveReceived('warning')->with('No missionaries found to send pray letter');
+//    }
+//
+//    public function test_doesNotSendPrayLetterWhenNoValidEmails()
+//    {
+//        Mail::fake();
+//        Log::spy();
+//
+//        Missionary::factory()->count(3)->create(['contact_email' => null]);
+//
+//        $job = new SendPrayLetterJob('Subject', 'Description', '/path/to/file');
+//        $job->handle();
+//
+//        Mail::assertNothingSent();
+//        Log::shouldHaveReceived('warning')->with('No valid emails found for missionaries');
+//    }
+//
+//    public function test_deletesFileAfterSending()
+//    {
+//        Mail::fake();
+//        $filePath = '/path/to/file';
+//        FilesHelper::shouldReceive('delete')->once()->with($filePath);
+//
+//        Missionary::factory()->count(1)->create(['contact_email' => 'test@example.com']);
+//        Config::set('mail.from.address', 'sender@example.com');
+//
+//        $job = new SendPrayLetterJob('Subject', 'Description', $filePath);
+//        $job->handle();
+//    }
+//
+//    public function test_logsErrorWhenMailFails()
+//    {
+//        Mail::fake();
+//        Log::spy();
+//
+//        Missionary::factory()->count(1)->create(['contact_email' => 'test@example.com']);
+//        Config::set('mail.from.address', 'sender@example.com');
+//
+//        Mail::shouldReceive('to->bcc->send')->andThrow(new \Exception('Mail error'));
+//
+//        $this->expectException(\Exception::class);
+//
+//        $job = new SendPrayLetterJob('Subject', 'Description', '/path/to/file');
+//        $job->handle();
+//
+//        Log::shouldHaveReceived('error')->with('Failed to send pray letter: Mail error');
+//    }
 }

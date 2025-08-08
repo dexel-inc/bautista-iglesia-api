@@ -19,7 +19,6 @@ class TestimonyFactory extends Factory
         return [
             'name' => fake()->name(),
             'content' => fake()->paragraph(3),
-            'image' => fake()->imageUrl(640, 480, 'people'),
             'rating' => fake()->numberBetween(1, 5),
         ];
     }

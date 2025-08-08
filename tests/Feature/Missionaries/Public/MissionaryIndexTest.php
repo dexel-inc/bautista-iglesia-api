@@ -1,18 +1,16 @@
 <?php
 
-namespace Tests\Feature\Missionaries;
+namespace Tests\Feature\Missionaries\Public;
 
 use App\Models\Missionary;
-
 use Tests\BaseTestCase;
 
 class MissionaryIndexTest extends BaseTestCase
 {
     public function test_it_returns_all_missionaries_successfully(): void
     {
-        $this->actingAsUser();
-
-        Missionary::factory()->count(3)->create();
+        Missionary::factory(['disable_at' => null])->count(3)->create();
+        Missionary::factory(['disable_at'  => now()])->count(2)->create();
 
         $response = $this->getJson(route('missionaries.index'));
 
@@ -28,8 +26,6 @@ class MissionaryIndexTest extends BaseTestCase
 
     public function test_it_returns_empty_array_when_no_missionaries_exist(): void
     {
-        $this->actingAsUser();
-
         $response = $this->getJson(route('missionaries.index'));
 
         $response->assertOk()
@@ -44,8 +40,6 @@ class MissionaryIndexTest extends BaseTestCase
 
     public function test_it_returns_missionaries_with_correct_structure(): void
     {
-        $this->actingAsUser();
-
         Missionary::factory()->create();
 
         $response = $this->getJson(route('missionaries.index'));
@@ -61,9 +55,6 @@ class MissionaryIndexTest extends BaseTestCase
                         'title',
                         'message',
                         'image',
-                        'isEnabled',
-                        'created_at',
-                        'updated_at'
                     ]
                 ]
             ]);

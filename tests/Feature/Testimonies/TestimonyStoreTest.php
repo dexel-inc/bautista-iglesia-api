@@ -4,8 +4,6 @@ namespace Tests\Feature\Testimonies;
 
 use App\Constants\Response;
 use App\Constants\Status;
-
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\BaseTestCase;
 
@@ -23,7 +21,6 @@ class TestimonyStoreTest extends BaseTestCase
             'name' => 'Juan Pérez',
             'content' => 'Este es un testimonio increíble sobre mi experiencia.',
             'rating' => 5,
-            'image' => UploadedFile::fake()->image('blog-image.jpg'),
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
@@ -37,7 +34,6 @@ class TestimonyStoreTest extends BaseTestCase
                     'id',
                     'name',
                     'content',
-                    'image',
                     'rating',
                     'created_at',
                     'updated_at',
@@ -72,7 +68,6 @@ class TestimonyStoreTest extends BaseTestCase
         $testimonyData = [
             'name' => 'María García',
             'content' => 'Otro testimonio maravilloso.',
-            'image' => UploadedFile::fake()->image('blog-image.jpg'),
             'rating' => 4
         ];
 
@@ -94,7 +89,7 @@ class TestimonyStoreTest extends BaseTestCase
         $response = $this->postJson(route('testimonies.store'), []);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name', 'content', 'image']);
+            ->assertJsonValidationErrors(['name', 'content']);
     }
 
     public function test_it_validates_string_fields(): void
@@ -109,7 +104,6 @@ class TestimonyStoreTest extends BaseTestCase
             'name' => 123,
             'content' => 'Contenido válido',
             'rating' => 5,
-            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
@@ -130,7 +124,6 @@ class TestimonyStoreTest extends BaseTestCase
             'name' => str_repeat('a', 256),
             'content' => str_repeat('b', 1001),
             'rating' => 5,
-            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
@@ -151,7 +144,6 @@ class TestimonyStoreTest extends BaseTestCase
             'name' => 'Juan Pérez',
             'content' => 'Contenido válido',
             'rating' => 6,
-            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
@@ -172,33 +164,11 @@ class TestimonyStoreTest extends BaseTestCase
             'name' => 'Juan Pérez',
             'content' => 'Contenido válido',
             'rating' => 0,
-            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         $response = $this->postJson(route('testimonies.store'), $testimonyData);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['rating']);
-    }
-
-    public function test_it_validates_image_file_type(): void
-    {
-        $this->actingAsUser();
-
-        Storage::fake('local');
-
-        $this->actingAsUser();
-
-        $testimonyData = [
-            'name' => 'Juan Pérez',
-            'content' => 'Contenido válido',
-            'rating' => 5,
-            'image' => UploadedFile::fake()->create('document.pdf', 1024, 'application/pdf'),
-        ];
-
-        $response = $this->postJson(route('testimonies.store'), $testimonyData);
-
-        $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['image']);
     }
 }

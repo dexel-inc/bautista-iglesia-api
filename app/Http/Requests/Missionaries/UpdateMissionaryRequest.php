@@ -27,10 +27,10 @@ class UpdateMissionaryRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        Log::info('en el request', ['is ENabled' => $this->get('isEnabled')]);
-        if($this->get('isEnabled')) {
+        $isEnabled = $this->get('isEnabled');
+        if($isEnabled && is_string($isEnabled)) {
             $this->merge([
-                'isEnabled' => $this->get('isEnabled') === 'true',
+                'isEnabled' => strtolower($this->get('isEnabled')) === 'true',
             ]);
         }
     }

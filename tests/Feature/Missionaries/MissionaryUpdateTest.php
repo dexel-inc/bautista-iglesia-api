@@ -31,10 +31,10 @@ class MissionaryUpdateTest extends BaseTestCase
             'title' => 'Misión Actualizada',
             'message' => 'Mensaje actualizado',
             'image' => UploadedFile::fake()->image('updated.jpg'),
-            'disable_at' => '2024-12-31 23:59:59',
+            'isEnabled' => true,
         ];
 
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+        $response = $this->postJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertOk()
             ->assertJson([
@@ -50,6 +50,7 @@ class MissionaryUpdateTest extends BaseTestCase
             'id' => $missionary->id,
             'title' => 'Misión Actualizada',
             'message' => 'Mensaje actualizado',
+            'disable_at' => null,
         ]);
 
         // Verificamos que se guardó una imagen
@@ -77,10 +78,9 @@ class MissionaryUpdateTest extends BaseTestCase
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
             'image' => UploadedFile::fake()->image('original.jpg'),
-            'disable_at' => '2024-06-01 00:00:00',
         ];
 
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+        $response = $this->postJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertOk()
             ->assertJson([
@@ -96,6 +96,7 @@ class MissionaryUpdateTest extends BaseTestCase
             'id' => $missionary->id,
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
+            'disable_at' => '2024-06-01 00:00:00',
         ]);
 
         // Verificamos que se guardó una imagen
@@ -119,7 +120,7 @@ class MissionaryUpdateTest extends BaseTestCase
             'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+        $response = $this->postJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['title']);
@@ -141,34 +142,13 @@ class MissionaryUpdateTest extends BaseTestCase
             'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+        $response = $this->postJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['title', 'message']);
     }
 
-    public function test_it_validates_disable_at_date_format(): void
-    {
-        $this->actingAsUser();
-
-        Storage::fake('local');
-
-        $this->actingAsUser();
-
-        $missionary = Missionary::factory()->create();
-
-        $updateData = [
-            'disable_at' => 'invalid-date',
-            'image' => UploadedFile::fake()->image('image.jpg'),
-        ];
-
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
-
-        $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['disable_at']);
-    }
-
-    public function test_it_can_set_disable_at_to_null(): void
+    public function test_it_can_send_is_enabled_to_string(): void
     {
         $this->actingAsUser();
 
@@ -184,10 +164,10 @@ class MissionaryUpdateTest extends BaseTestCase
             'title' => 'Misión Parcialmente Actualizada',
             'message' => 'Mensaje original',
             'image' => UploadedFile::fake()->image('original.jpg'),
-            'disable_at' => null,
+            'isEnabled' => 'true',
         ];
 
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+        $response = $this->postJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertOk();
 
@@ -214,7 +194,7 @@ class MissionaryUpdateTest extends BaseTestCase
             'disable_at' => '2024-12-31 23:59:59',
         ];
 
-        $response = $this->putJson(route('missionaries.update', $missionary), $updateData);
+        $response = $this->postJson(route('missionaries.update', $missionary), $updateData);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['image']);

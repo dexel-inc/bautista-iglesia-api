@@ -29,7 +29,6 @@ class TestimonyShowTest extends BaseTestCase
                     'id',
                     'name',
                     'content',
-                    'image',
                     'rating',
                     'created_at',
                     'updated_at',

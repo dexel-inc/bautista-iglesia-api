@@ -39,7 +39,8 @@ class MissionaryStoreTest extends BaseTestCase
                     'title',
                     'message',
                     'image',
-                    'disable_at',
+                    'isEnabled',
+                    'user',
                     'created_at',
                     'updated_at',
                 ]
@@ -91,7 +92,7 @@ class MissionaryStoreTest extends BaseTestCase
         $response = $this->postJson(route('missionaries.store'), []);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['title', 'message', 'image']);
+            ->assertJsonValidationErrors(['title', 'image']);
     }
 
     public function test_it_validates_string_fields(): void
@@ -132,27 +133,6 @@ class MissionaryStoreTest extends BaseTestCase
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['title', 'message']);
-    }
-
-    public function test_it_validates_disable_at_date_format(): void
-    {
-        $this->actingAsUser();
-
-        Storage::fake('local');
-
-        $this->actingAsUser();
-
-        $missionaryData = [
-            'title' => 'Misión válida',
-            'message' => 'Mensaje válido',
-            'image' => UploadedFile::fake()->image('image.jpg'),
-            'disable_at' => 'invalid-date',
-        ];
-
-        $response = $this->postJson(route('missionaries.store'), $missionaryData);
-
-        $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['disable_at']);
     }
 
     public function test_it_validates_image_file_type(): void

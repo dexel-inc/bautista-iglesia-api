@@ -17,11 +17,6 @@ class StoreOrUpdateMissionaryAction
         $missionary->disable_at = isset($data['isEnabled']) ? ($data['isEnabled'] ? null : now()) : $missionary->disable_at;
         $missionary->order = $data['order'] ?? null;
 
-        Log::info('LO QUE LLEGO', [
-            'isEnabled' => $data['isEnabled'] === 'true',
-'como se seteo' => $missionary->disable_at
-        ]);
-
         if (isset($data['image'])) {
             $imagePath = FilesHelper::save('missionary/images', $data['image']);
             $missionary->image = $imagePath;
