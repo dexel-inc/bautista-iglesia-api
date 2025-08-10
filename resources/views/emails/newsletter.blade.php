@@ -109,9 +109,11 @@
 
             <div class="subject">{{ $subject }}</div>
 
-            <div class="message">
-                {!! nl2br(e($description)) !!}
-            </div>
+            @if($description)
+                <div class="message">
+                    {!! nl2br(e($description)) !!}
+                </div>
+            @endif
         </div>
 
         <div class="footer">
@@ -136,4 +138,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>

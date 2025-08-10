@@ -14,8 +14,8 @@ class PrayLetterMail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
-        private readonly string $description,
-        private readonly string $filePath,
+        private readonly ?string $description,
+        private readonly ?string $filePath,
         private readonly string $emailSubject = 'Carta de Oración'
     ) {}
 
@@ -45,4 +45,4 @@ class PrayLetterMail extends Mailable
                 ->withMime('application/pdf'),
         ];
     }
-} 
+}

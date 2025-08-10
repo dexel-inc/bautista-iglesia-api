@@ -22,7 +22,7 @@ class SendNewsLetterJob implements ShouldQueue
 
     public function __construct(
         private readonly string $subject,
-        private readonly string $description,
+        private readonly ?string $description = null,
         private readonly ?string $filePath = null
     ) {}
 

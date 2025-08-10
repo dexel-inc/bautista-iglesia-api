@@ -21,8 +21,8 @@ class SendPrayLetterJob implements ShouldQueue
 
     public function __construct(
         private readonly string $subject,
-        private readonly string $description,
-        private readonly string $filePath
+        private readonly ?string $description = '',
+        private readonly ?string $filePath
     ) {}
 
     public function handle(): void

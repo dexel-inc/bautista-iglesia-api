@@ -14,7 +14,7 @@ class NewsLetterMail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
-        private readonly string $description,
+        private readonly ?string $description,
         private readonly ?string $filePath = null,
         private readonly string $emailSubject = 'Newsletter'
     ) {}
@@ -49,4 +49,4 @@ class NewsLetterMail extends Mailable
                 ->withMime('application/pdf'),
         ];
     }
-} 
+}
