@@ -1,0 +1,76 @@
+service: bautista-iglesia-api
+provider:
+    name: aws
+    region: us-east-1
+    vpc:
+      securityGroupIds:
+        - sg-0c4b2122c48c40850
+      subnetIds:
+        - subnet-08211ccbbbb4bfae6
+        - subnet-027605be97c52e535
+        - subnet-04058bb47eb40aa1b
+        - subnet-0d443c394d8bc7f53
+        - subnet-07a6894e70f4d8015
+        - subnet-00e22bfe91dde3e77
+    environment:
+        APP_ENV: production
+        SESSION_DRIVER: cookie
+        LOG_STDERR_FORMATTER: Bref\Monolog\CloudWatchFormatter
+        DYNAMODB_CACHE_TABLE: 'cache'
+        QUEUE_CONNECTION: sqs
+    iam:
+      role:
+        statements:
+          - Effect: Allow
+            Action:
+              - rds:*
+            Resource: arn:aws:rds:us-east-1:358143186144:db:bautista-iglesia-db
+          - Effect: Allow
+            Action:
+              - s3:*
+            Resource: arn:aws:s3:::bautista-iglesia
+          - Effect: Allow
+            Action:
+              - s3:*
+            Resource: arn:aws:s3:::bautista-iglesia
+          - Effect: Allow
+            Action:
+              - sqs:*
+            Resource: arn:aws:sqs:us-east-1:358143186144:bautista-iglesia-queue
+package:
+    patterns:
+        - '!node_modules/**'
+        - '!public/storage'
+        - '!resources/assets/**'
+        - '!resources/css/**'
+        - '!resources/images/**'
+        - '!resources/js/**'
+        - '!tests/**'
+        - '!database/*.sqlite'
+        - '!public/build/**'
+        - '!.idea'
+        - 'public/build/manifest.json'
+
+functions:
+    web:
+        handler: public/index.php
+        runtime: php-84-fpm
+        timeout: 28
+        events:
+            - httpApi: '*'
+    artisan:
+        handler: artisan
+        runtime: php-84-console
+        timeout: 720
+        events:
+            - schedule:
+                  rate: rate(1 minute)
+                  input: '"schedule:run"'
+    queue:
+      handler: worker.php
+      runtime: php-84
+      timeout: 120
+
+plugins:
+  - ./vendor/bref/bref
+  - serverless-lift

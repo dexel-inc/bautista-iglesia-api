@@ -75,6 +75,7 @@ return [
             'driver' => 'redis',
             'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+            'scheme' => env('REDIS_SCHEME', 'ttl'),
         ],
 
         'dynamodb' => [
@@ -84,6 +85,11 @@ return [
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
             'endpoint' => env('DYNAMODB_ENDPOINT'),
+            'scheme' => env('DYNAMODB_SCHEME', 'ttl'),
+            'attributes' => [
+                'key' => 'id',
+                'ttl' => 'ttl',
+            ],
         ],
 
         'octane' => [

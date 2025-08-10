@@ -10,8 +10,6 @@ class MissionariesSeeder extends Seeder
 {
     public function run(): void
     {
-        Storage::put('/missionary/images/the-kinds.jpg', Storage::disk('local')->get('imgs/missionaries/the-kings.jpg'));
-
         Missionary::create(
             [
                 'title' => 'The Kinds to Mexico',
@@ -20,7 +18,6 @@ class MissionariesSeeder extends Seeder
                 'order' => 1,
             ]
         );
-        Storage::put('/missionary/images/stoltzfus-family.jpg', Storage::disk('local')->get('/imgs/missionaries/stoltzfus-family.jpg'));
 
         Missionary::create(
             [
@@ -31,8 +28,6 @@ class MissionariesSeeder extends Seeder
             ]
         );
 
-        Storage::put('/missionary/images/MIAI.jpeg', Storage::disk('local')->get('/imgs/missionaries/MIAI.jpeg'));
-
         Missionary::create(
             [
                 'title' => 'Missions In Action International (MIAI)',
@@ -41,8 +36,6 @@ class MissionariesSeeder extends Seeder
                 'order' => 3,
             ]
         );
-
-        Storage::put('/missionary/images/crossing-the-streets.jpeg', Storage::disk('local')->get('/imgs/missionaries/crossing-the-streets.jpeg'));
 
         Missionary::create(
             [
