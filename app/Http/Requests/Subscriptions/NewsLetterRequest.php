@@ -15,7 +15,7 @@ class NewsLetterRequest extends FormRequest
     {
         return [
             'subject' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => ['nullable', 'string', 'max:1000'],
             'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
         ];
     }

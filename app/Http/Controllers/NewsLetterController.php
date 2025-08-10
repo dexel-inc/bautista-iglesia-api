@@ -23,4 +23,4 @@ class NewsLetterController extends Controller
 
         return ApiResponse::successOnly();
     }
-} 
+}
