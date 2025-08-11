@@ -32,7 +32,7 @@ provider:
           - Effect: Allow
             Action:
               - s3:*
-            Resource: arn:aws:s3:::bautista-iglesia
+            Resource: arn:aws:s3:us-east-1:358143186144:accesspoint/bautista-iglesia
           - Effect: Allow
             Action:
               - sqs:*
