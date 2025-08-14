@@ -22,9 +22,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->trustProxies(headers: Request::HEADER_X_FORWARDED_FOR);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    })
     ->withExceptions(function (Exceptions $exceptions) {
         Integration::handles($exceptions);
     })->create();
