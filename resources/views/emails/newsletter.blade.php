@@ -104,7 +104,7 @@
 
         <div class="content">
             <div class="church-image">
-                <img src="{{ config('app.church_logo_url') }}" alt="Iglesia Bautista Fundamental">
+                <img src="https://admin.ibfcasagrande.com/logo.png" alt="Iglesia Bautista Fundamental">
             </div>
 
             <div class="subject">{{ $subject }}</div>

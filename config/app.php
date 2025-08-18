@@ -133,6 +133,6 @@ return [
     |
     */
 
-    'church_logo_url' => env('CHURCH_LOGO_URL', 'https://i.imgur.com/FMCF7HO.png'),
+    'church_logo_url' => env('CHURCH_LOGO_URL', 'https://admin.ibfcasagrande.com/logo.svg'),
 
 ];

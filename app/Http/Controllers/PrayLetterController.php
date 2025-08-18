@@ -15,8 +15,8 @@ class PrayLetterController extends Controller
         $data = $request->validated();
         $filePath = FilesHelper::save('pray-letters', $data['file']);
 
-        SendPrayLetterJob::dispatch($data['subject'], $data['description'], $filePath);
+        SendPrayLetterJob::dispatchSync($data['subject'], $data['description'], $filePath);
 
         return ApiResponse::successOnly();
     }
-} 
+}
