@@ -15,7 +15,7 @@ class PrayLettersRequest extends FormRequest
     {
         return [
             'type' => ['required', 'string', 'max:255'],
-            'file' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'file' => ['nullable'],
             'link' => ['string', 'nullable'],
         ];
     }

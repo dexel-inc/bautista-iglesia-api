@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\Public;
 
+use App\Constants\TypesPrayletter;
 use App\Helpers\FilesHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class MissionaryResource extends JsonResource
 {
@@ -16,7 +18,9 @@ class MissionaryResource extends JsonResource
             'message' => $this->message,
             'image' => FilesHelper::get($this->image),
             'type' => $this->type,
-            'url' => $this->url,
+            'url' => $this->type === TypesPrayletter::FILE->value && $this->url
+                ? FilesHelper::get($this->url)
+                : $this->url,
         ];
     }
 
