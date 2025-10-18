@@ -15,6 +15,8 @@ class MissionaryResource extends JsonResource
             'title' => $this->title,
             'message' => $this->message,
             'image' => FilesHelper::get($this->image),
+            'type' => $this->type,
+            'url' => $this->url,
         ];
     }
 
