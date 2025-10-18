@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('missionaries', MissionaryController::class)->except('update');
     Route::post('missionaries/{missionary}/edit', [MissionaryController::class, 'update'])->name('missionaries.update');
-    Route::post('pray-letters/send', [PrayLetterController::class, 'send'])->name('pray-letters.send');
+    Route::post('pray-letters/send/{missionary}', [PrayLetterController::class, 'send'])->name('pray-letters.send');
     Route::post('newsletters/send', [NewsLetterController::class, 'send'])->name('newsletters.send');
     Route::post('/visits/stats', [VisitController::class, 'stats']);
 });

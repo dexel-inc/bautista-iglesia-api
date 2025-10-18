@@ -14,9 +14,9 @@ class PrayLettersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
+            'type' => ['required', 'string', 'max:255'],
+            'file' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'link' => ['string', 'nullable'],
         ];
     }
 }

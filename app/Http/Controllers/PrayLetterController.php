@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Missionaries\SavePrayLetterMissionaryAction;
 use App\Http\Requests\Missionaries\PrayLettersRequest;
-use App\Helpers\FilesHelper;
-use App\Jobs\SendPrayLetterJob;
+use App\Models\Missionary;
 use App\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 class PrayLetterController extends Controller
 {
-    public function send(PrayLettersRequest $request): JsonResponse
+    public function send(
+        PrayLettersRequest $request,
+        Missionary $missionary,
+        SavePrayLetterMissionaryAction $savePrayLetterMissionaryAction
+    ): JsonResponse
     {
-        $data = $request->validated();
-        $filePath = FilesHelper::save('pray-letters', $data['file']);
-
-        SendPrayLetterJob::dispatchSync($data['subject'], $data['description'], $filePath);
-
+        $savePrayLetterMissionaryAction->execute($request->validated(), $missionary);
         return ApiResponse::successOnly();
     }
 }

@@ -25,6 +25,8 @@ class MissionaryResource extends JsonResource
             ],
             'image' => FilesHelper::get($this->image),
             'isEnabled' => !$this->disable_at,
+            'type' => $this->type,
+            'url' => $this->url,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
