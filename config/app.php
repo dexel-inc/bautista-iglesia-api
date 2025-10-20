@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Church Logo Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This configuration is used for the church logo in email templates.
+    | You can set this in your ".env" file.
+    |
+    */
+
+    'church_logo_url' => env('CHURCH_LOGO_URL', 'https://admin.ibfcasagrande.com/logo.svg'),
+
 ];

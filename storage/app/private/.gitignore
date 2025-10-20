@@ -1,2 +1,6 @@
 *
 !.gitignore
+!imgs
+!imgs/missionaries
+!imgs/missionaries/*
+
